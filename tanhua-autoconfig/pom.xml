@@ -20,29 +20,32 @@
 
 
     <dependencies>
-        <!--阿里云核心API-->
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+     <!--   &lt;!&ndash;阿里云核心API&ndash;&gt;
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-core</artifactId>
             <version>4.5.3</version>
-        </dependency>
+        </dependency>-->
+
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>dysmsapi20170525</artifactId>
             <version>2.0.1</version>
         </dependency>
+
         <!--阿里云oss存储API-->
         <dependency>
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
             <version>3.10.2</version>
         </dependency>
-        <!--阿里云人识别-->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>facebody20191230</artifactId>
-            <version>1.0.10</version>
-        </dependency>
+
         <!--百度人脸识别API-->
         <dependency>
             <groupId>com.baidu.aip</groupId>
@@ -50,21 +53,29 @@
             <version>4.8.0</version>
         </dependency>
 
-        <!--springboot基础起步依赖-->
+      <!--  &lt;!&ndash;springboot基础起步依赖&ndash;&gt;
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+        </dependency>-->
+
         <dependency>
             <groupId>com.easemob.im</groupId>
             <artifactId>im-sdk-core</artifactId>
-            <version>0.2.5</version>
+            <version>0.5.2</version>
         </dependency>
+
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+   <!--     <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-green</artifactId>
             <version>3.6.1</version>
-        </dependency>
+        </dependency>-->
+
     </dependencies>
 
 

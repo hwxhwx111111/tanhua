@@ -1,6 +1,5 @@
 server:
   port: 8081
-
 spring:
   application:
     name: tanhua-dubbo-db
@@ -29,7 +28,7 @@ dubbo:
 mybatis-plus:
   global-config:
     db-config:
-      id-type: auto
       table-prefix: tb_
+      id-type: auto
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

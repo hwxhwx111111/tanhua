@@ -2,7 +2,7 @@ package com.itheima.tanhua.handler;
 
 import com.itheima.tanhua.exception.BusinessException;
 import com.itheima.tanhua.exception.ConsumerException;
-import com.itheima.tanhua.pojo.ErrorResult;
+import com.itheima.tanhua.exception.ErrorResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

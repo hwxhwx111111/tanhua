@@ -25,8 +25,8 @@ public class UserInforController {
      * @return: org.springframework.http.ResponseEntity
      **/
     @PostMapping("/loginReginfo")
-    public ResponseEntity loginReginfo(@RequestHeader("Authorization") String token, @RequestBody UserInfoDto userInfoDto) {
-        userInfoService.loginReginfo(token,userInfoDto);
+    public ResponseEntity loginReginfo( @RequestBody UserInfoDto userInfoDto) {
+        userInfoService.loginReginfo(userInfoDto);
         return ResponseEntity.ok(null);
     }
 
@@ -38,8 +38,8 @@ public class UserInforController {
      * @return: org.springframework.http.ResponseEntity
      **/
     @PostMapping("loginReginfo/head")
-    public ResponseEntity uploadImage(@RequestHeader("Authorization") String token, MultipartFile headPhoto) {
-        userInfoService.uploadImage(token,headPhoto);
+    public ResponseEntity uploadImage( MultipartFile headPhoto) {
+        userInfoService.uploadImage(headPhoto);
         return ResponseEntity.ok(null);
     }
 

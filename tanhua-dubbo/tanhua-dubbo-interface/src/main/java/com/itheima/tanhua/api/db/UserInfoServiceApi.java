@@ -2,6 +2,9 @@ package com.itheima.tanhua.api.db;
 
 import com.itheima.tanhua.pojo.db.UserInfo;
 
+import java.util.List;
+import java.util.Map;
+
 public interface UserInfoServiceApi {
 
 
@@ -24,11 +27,29 @@ public interface UserInfoServiceApi {
     void updateAvatar(UserInfo userInfo);
 
     /**
-     * @description: 根据用户id查询用户信息
+     * @description: 根据用户id查询用户详细信息
      * @author: 黄伟兴
-     * @date: 2022/9/23 0:17
+     * @date: 2022/9/24 19:40
      * @param: [userId]
      * @return: com.itheima.tanhua.pojo.db.UserInfo
      **/
     UserInfo findById(Long userId);
+
+    /**
+     * @description: 通过id查询用户信息
+     * @author: 黄伟兴
+     * @date: 2022/9/29 1:12
+     * @param: [userIds, o]
+     * @return: java.util.Map<java.lang.Long,com.itheima.tanhua.pojo.db.UserInfo>
+     **/
+    Map<Long, UserInfo> findByIds(List<Long> userIds, UserInfo userInfo);
+
+    /**
+     * @description: 联系人列表分页查询
+     * @author: 黄伟兴
+     * @date: 2022/9/29 1:12
+     * @param: [friendIds, page, pagesize, keyword]
+     * @return: java.util.List<com.itheima.tanhua.pojo.db.UserInfo>
+     **/
+    List<UserInfo> findPageByIds(List<Long> friendIds, Integer page, Integer pagesize, String keyword);
 }

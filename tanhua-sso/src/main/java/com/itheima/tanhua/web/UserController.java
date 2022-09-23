@@ -31,7 +31,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("验证码还未失效");
         }
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok("短信已经发送");
     }
 
     /**
@@ -47,21 +47,6 @@ public class UserController {
         String verificationCode = param.get("verificationCode");
         HashMap map = userService.loginVerification(phone, verificationCode);
         return ResponseEntity.ok(map);
-    }
-
-
-
-
-    /**
-     * @description: 向外提供一个获取用户id
-     * @author: 黄伟兴
-     * @date: 2022/9/20 13:59
-     * @param: [token]
-     * @return: java.lang.Long
-     **/
-    @GetMapping("{token}")
-    public Long getUserId(@PathVariable String token){
-        return userService.getUserId(token);
     }
 
 }

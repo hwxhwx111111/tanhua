@@ -1,3 +1,6 @@
+#server:
+  #port: 8080
+
 spring:
   data:
     mongodb:
@@ -8,9 +11,6 @@ spring:
     nacos:
       server-addr: 192.168.136.160:8848
 
-
-
-
 dubbo:
   registry:
     address: spring-cloud://localhost
@@ -19,3 +19,4 @@ dubbo:
   protocol:
     port: 20883
     name: dubbo
+

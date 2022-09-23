@@ -15,7 +15,8 @@
         <module>tanhua-dubbo</module>
         <module>tanhua-commons</module>
         <module>tanhua-sso</module>
-        <module>gateway</module>
+        <module>tanhua-gateway</module>
+        <module>tanhua-admin</module>
     </modules>
 
 

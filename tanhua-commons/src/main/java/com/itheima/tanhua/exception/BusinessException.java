@@ -1,6 +1,6 @@
 package com.itheima.tanhua.exception;
 
-import com.itheima.tanhua.pojo.ErrorResult;
+
 import lombok.Data;
 
 /**

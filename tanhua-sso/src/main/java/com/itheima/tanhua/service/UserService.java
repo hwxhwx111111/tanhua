@@ -1,15 +1,15 @@
 package com.itheima.tanhua.service;
 
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.itheima.autoconfig.template.HuanXinTemplate;
+import com.itheima.autoconfig.template.OssTemplate;
 import com.itheima.tanhua.api.db.UserServiceApi;
-import com.itheima.tanhua.autoconfig.template.OssTemplate;
 import com.itheima.tanhua.exception.ConsumerException;
 import com.itheima.tanhua.pojo.db.User;
 import com.itheima.tanhua.utils.AppJwtUtil;
-import io.jsonwebtoken.Claims;
+import com.itheima.tanhua.utils.Constants;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,9 @@ public class UserService {
 
     @Autowired
     private OssTemplate ossTemplate;
+
+    @Autowired
+    private HuanXinTemplate huanXinTemplate;
 
 
     /**
@@ -97,13 +100,22 @@ public class UserService {
             user = new User();
             user.setMobile(phone);
             user.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
-         /*   user.setCreated(new Date());
-            user.setUpdated(new Date());*/
-
             userServiceApi.save(user);
-            //TODO，重新查询，获取id
             user = userServiceApi.findByPhone(phone);
             isNew = true;
+
+
+            //注册环信用户
+            String hxUser = "hx" + user.getId();
+            Boolean create = huanXinTemplate.createUser(hxUser, Constants.INIT_PASSWORD);
+            System.out.println("create: "+create);
+            if (create) {
+                //如果注册成功，将用户信息补充
+                user.setHxUser(hxUser);
+                user.setHxPassword(Constants.INIT_PASSWORD);
+                userServiceApi.update(user);
+            }
+
         }
 
         //4.生成token，保存用户id
@@ -114,28 +126,8 @@ public class UserService {
         map.put("isNew", isNew);
 
         //5.清除验证码
-        redisTemplate.delete(redisKey);
+        //  redisTemplate.delete(redisKey);
         return map;
     }
 
-
-
-
-
-    /**
-     * @description: 抽取token，获取用户id
-     * @author: 黄伟兴
-     * @date: 2022/9/20 11:47
-     * @param: [token]
-     * @return: java.lang.Long
-     **/
-    public Long getUserId(String token){
-        //1.校验token
-        Claims claimsBody = AppJwtUtil.getClaimsBody(token);
-        int i = AppJwtUtil.verifyToken(claimsBody);
-        if (i == 1 || i == 2) {
-            throw new ConsumerException("已经过期");
-        }
-        return Convert.toLong(claimsBody.get("id"));
-    }
 }

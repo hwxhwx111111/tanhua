@@ -1,0 +1,18 @@
+server:
+  port: 18081
+
+
+
+
+spring:
+  application:
+    name: tanhua-app
+  cloud:
+    nacos:
+      server-addr: 192.168.136.160:8848
+dubbo:
+  registry:
+    address: spring-cloud://localhost
+  protocol:
+    port: 20882
+    name: dubbo 

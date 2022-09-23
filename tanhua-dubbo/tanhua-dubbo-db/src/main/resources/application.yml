@@ -1,0 +1,35 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: tanhua-dubbo-db
+
+  #spring-cloud 注册中心
+  cloud:
+    nacos:
+      server-addr: 192.168.136.160:8848
+
+  datasource:
+    url: jdbc:mysql:///tanhua?useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+
+dubbo:
+  registry:
+    address: spring-cloud://localhost
+  scan:
+    base-packages: com.itheima.tanhua.api
+  protocol:
+    port: 20881
+    name: dubbo
+
+#mp配置
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+      table-prefix: tb_
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

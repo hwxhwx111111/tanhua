@@ -4,10 +4,8 @@ package com.tanhua.admin.service;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.tanhua.pojo.db.Admin;
-import com.itheima.tanhua.pojo.db.AdminVo;
 import com.itheima.tanhua.utils.Constants;
 import com.tanhua.admin.exception.BusinessException;
-import com.tanhua.admin.interceptor.AdminHolder;
 import com.tanhua.admin.mapper.AdminMapper;
 import com.tanhua.admin.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,10 +83,5 @@ public class AdminService {
         return res;
     }
 
-    //获取当前用户的用户资料
-    public AdminVo profile() {
-        Long id = AdminHolder.getId();
-        Admin admin = adminMapper.selectById(id);
-        return AdminVo.init(admin);
-    }
+
 }

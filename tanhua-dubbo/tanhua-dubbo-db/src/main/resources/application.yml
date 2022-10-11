@@ -23,7 +23,8 @@ dubbo:
   protocol:
     port: 20881
     name: dubbo
-
+  cloud:
+    subscribed-services: provider
   consumer:
     check: false
 

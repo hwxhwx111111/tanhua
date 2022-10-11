@@ -3,7 +3,6 @@ package com.tanhua.admin.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
-import com.itheima.tanhua.pojo.db.AdminVo;
 import com.itheima.tanhua.utils.Constants;
 import com.tanhua.admin.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +58,6 @@ public class SystemController {
         return ResponseEntity.ok(retMap);
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity profile(){
-        AdminVo vo = adminService.profile();
-        return ResponseEntity.ok(vo);
-    }
+
 
 }

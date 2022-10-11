@@ -108,7 +108,7 @@ public class UserService {
             //注册环信用户
             String hxUser = "hx" + user.getId();
             Boolean create = huanXinTemplate.createUser(hxUser, Constants.INIT_PASSWORD);
-            System.out.println("create: "+create);
+            System.out.println("create: " + create);
             if (create) {
                 //如果注册成功，将用户信息补充
                 user.setHxUser(hxUser);
@@ -126,7 +126,7 @@ public class UserService {
         map.put("isNew", isNew);
 
         //5.清除验证码
-        //  redisTemplate.delete(redisKey);
+        redisTemplate.delete(redisKey);
         return map;
     }
 

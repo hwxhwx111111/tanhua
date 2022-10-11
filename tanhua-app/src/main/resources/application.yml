@@ -27,8 +27,10 @@ dubbo:
     check: false
   scan:
     base-packages: com.itheima.tanhua.web
-
-
+  cloud:
+    subscribed-services: tanhua-dubbo-db,tanhua-dubbo-mongo
+  application:
+    logger: slf4j
 
 tanhua:
   #阿里云对象存储服务配置
@@ -41,9 +43,9 @@ tanhua:
 
 
   huanxin:
-    appkey: 1157220926140087#tanhua
-    clientId: YXA6gXk6JG8eSPeALWI7yqTZ4g
-    clientSecret: YXA6mUkEg3SLCqdsML7jJ-OeulMQF_g
+    appkey: 1154220926128428#tanhua
+    clientId: YXA6QhQTfyVbQJC3vYibPW36fA
+    clientSecret: YXA6i55ohePh9Fnngk8-FIzLQ2GspWo
 
 #默认推荐列表
   default:

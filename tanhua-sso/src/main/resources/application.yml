@@ -19,7 +19,10 @@ dubbo:
     base-packages: com.itheima.tanhua.web
   consumer:
     check: false
-
+  cloud:
+    subscribed-services: tanhua-dubbo-db
+  application:
+    logger: slf4j
 
 
 

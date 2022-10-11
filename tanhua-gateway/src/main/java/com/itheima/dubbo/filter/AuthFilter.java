@@ -43,6 +43,7 @@ public class AuthFilter implements GlobalFilter {
 
         //2.获取header中的token
         String token = request.getHeaders().getFirst("Authorization");
+        token = token.replace("Bearer ","");
         //2.解析token，校验token
         Claims claimsBody = AppJwtUtil.getClaimsBody(token);
         int i = AppJwtUtil.verifyToken(claimsBody);

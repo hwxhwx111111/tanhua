@@ -19,4 +19,5 @@ dubbo:
   protocol:
     port: 20883
     name: dubbo
-
+  cloud:
+    subscribed-services: provider

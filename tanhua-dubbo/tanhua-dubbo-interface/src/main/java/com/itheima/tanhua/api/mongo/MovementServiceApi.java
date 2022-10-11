@@ -3,6 +3,7 @@ package com.itheima.tanhua.api.mongo;
 import com.itheima.tanhua.pojo.mongo.Movement;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface MovementServiceApi {
@@ -95,7 +96,7 @@ public interface MovementServiceApi {
      * @param: [movementId]
      * @return: com.itheima.tanhua.vo.mongo.MovementsVoNew
      **/
-    Boolean approveMovement(String[] movementId);
+    Boolean approveMovement(String[] movementIds);
 
     /**
      * @description: 动态拒绝
@@ -105,4 +106,12 @@ public interface MovementServiceApi {
      * @return: java.lang.Boolean
      **/
     Boolean rejectMovement(String[] movementIds);
+
+    Long findAll(Long id);
+
+    Long findAll();
+
+    ArrayList<Long> findUserIds();
+
+    List<Movement> findMovementByIdAndState1(ArrayList<Long> ids, Integer state, Integer page, Integer pagesize);
 }

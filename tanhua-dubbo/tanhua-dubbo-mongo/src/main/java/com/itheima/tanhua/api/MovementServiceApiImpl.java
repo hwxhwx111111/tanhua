@@ -1,5 +1,6 @@
 package com.itheima.tanhua.api;
 
+import cn.hutool.core.collection.CollUtil;
 import com.itheima.tanhua.api.mongo.MovementServiceApi;
 import com.itheima.tanhua.pojo.mongo.Movement;
 import com.itheima.tanhua.utils.IdWorker;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @DubboService
@@ -53,7 +55,7 @@ public class MovementServiceApiImpl implements MovementServiceApi {
         //PageRequest pageAble = PageRequest.of(page - 1, pagesize, Sort.by(Sort.Order.by("created")));
 
         Query query = Query.query(Criteria.where("userId").is(userId))
-                .skip((page-1)*pagesize)
+                .skip((page - 1) * pagesize)
                 .limit(pagesize)
                 .with(Sort.by(Sort.Order.desc("created"))); //按发布时间降序
 
@@ -73,7 +75,7 @@ public class MovementServiceApiImpl implements MovementServiceApi {
         //PageRequest pageAble = PageRequest.of(page - 1, pagesize, Sort.by(Sort.Order.by("created")));
 
         Query query = Query.query(Criteria.where("id").in(movementIds))
-                .skip( (page-1)*pagesize)
+                .skip((page - 1) * pagesize)
                 .limit(pagesize)
                 .with(Sort.by(Sort.Order.by("created")));
         return mongoTemplate.find(query, Movement.class);
@@ -91,7 +93,7 @@ public class MovementServiceApiImpl implements MovementServiceApi {
 
         Query query = Query.query(Criteria.where("pid").in(pids));
 
-       return mongoTemplate.find(query,Movement.class);
+        return mongoTemplate.find(query, Movement.class);
     }
 
     /**
@@ -104,7 +106,7 @@ public class MovementServiceApiImpl implements MovementServiceApi {
     @Override
     public List<Movement> randomMovements(Integer pagesize) {
         //1.创建统计对象，设置统计参数
-        TypedAggregation<Movement> aggregation = Aggregation.newAggregation(Movement.class,Aggregation.sample(pagesize));
+        TypedAggregation<Movement> aggregation = Aggregation.newAggregation(Movement.class, Aggregation.sample(pagesize));
 
         //2.调用mongoTemlate方法统计
         AggregationResults<Movement> results = mongoTemplate.aggregate(aggregation, Movement.class);
@@ -116,7 +118,7 @@ public class MovementServiceApiImpl implements MovementServiceApi {
     @Override
     public Movement findMovementByMovementId(String movementId) {
 
-        return mongoTemplate.findById(movementId,Movement.class);
+        return mongoTemplate.findById(movementId, Movement.class);
     }
 
     /**
@@ -128,8 +130,22 @@ public class MovementServiceApiImpl implements MovementServiceApi {
      **/
     @Override
     public List<Movement> findMovementByIdAndState(Long uid, Integer state, Integer page, Integer pagesize) {
-        Query query = Query.query(Criteria.where("userId").is(uid).and("state").is(state))
-                .skip((page-1)*pagesize)
+
+        Criteria criteria=new Criteria();
+
+        if (uid != null) {
+            criteria = Criteria.where("userId").is(uid);
+        }
+        if (state != null) {
+            Criteria.where("state").is(state);
+        }else{
+            state=0;
+            Criteria.where("state").is(state);
+        }
+
+
+        Query query = Query.query(criteria)
+                .skip((page - 1) * pagesize)
                 .limit(pagesize)
                 .with(Sort.by(Sort.Order.desc("created"))); //按发布时间降序
 
@@ -169,8 +185,17 @@ public class MovementServiceApiImpl implements MovementServiceApi {
      * @return: com.itheima.tanhua.vo.mongo.MovementsVoNew
      **/
     @Override
-    public Boolean approveMovement(String[] movementId) {
-        //TODO 待解决
+    public Boolean approveMovement(String[] movementIds) {
+
+        for (String movementId : movementIds) {
+            Movement movement = mongoTemplate.findById(movementId, Movement.class);
+            movement.setState(1);
+            Movement save = mongoTemplate.save(movement);
+            if (save == null) {
+                return false;
+            }
+
+        }
         return true;
     }
 
@@ -183,7 +208,52 @@ public class MovementServiceApiImpl implements MovementServiceApi {
      **/
     @Override
     public Boolean rejectMovement(String[] movementIds) {
-        //TODO 待解决
+
+        for (String movementId : movementIds) {
+            Movement movement = mongoTemplate.findById(movementId, Movement.class);
+            movement.setState(0);
+            Movement save = mongoTemplate.save(movement);
+            if (save == null) {
+                return false;
+            }
+        }
         return true;
+    }
+
+    @Override
+    public Long findAll(Long id) {
+        long count = mongoTemplate.count(new Query(Criteria.where("_id").is(id)), Movement.class);
+
+        return count;
+    }
+
+    @Override
+    public Long findAll() {
+        long count = mongoTemplate.count(new Query(), Movement.class);
+
+        return count;
+    }
+
+    @Override
+    public ArrayList<Long> findUserIds() {
+
+        List<Movement> movementList = mongoTemplate.findAll(Movement.class);
+        List<Long> userIds = CollUtil.getFieldValues(movementList, "userId", Long.class);
+
+        return (ArrayList<Long>) userIds;
+    }
+
+    @Override
+    public List<Movement> findMovementByIdAndState1(ArrayList<Long> ids, Integer state, Integer page, Integer pagesize) {
+
+        Criteria criteria=Criteria.where("userId").in(ids).and("state").is(state);
+
+        Query query = Query.query(criteria)
+                .skip((page - 1) * pagesize)
+                .limit(pagesize)
+                .with(Sort.by(Sort.Order.desc("created"))); //按发布时间降序
+
+        List<Movement> movements = mongoTemplate.find(query, Movement.class);
+        return movements;
     }
 }

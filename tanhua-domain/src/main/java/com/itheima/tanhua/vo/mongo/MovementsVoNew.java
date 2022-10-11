@@ -1,6 +1,7 @@
 package com.itheima.tanhua.vo.mongo;
 
 
+import com.itheima.tanhua.pojo.db.UserInfo;
 import com.itheima.tanhua.pojo.mongo.Movement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,11 +25,20 @@ public class MovementsVoNew implements Serializable {
     private Integer commentCount = 0; //评论数
     private Integer likeCount = 0; //点赞数
 
+    //封装数据
+    public static MovementsVoNew init(Movement movement, UserInfo userInfo) {
 
-    public static MovementsVoNew init(Movement movement) {
-        MovementsVoNew movementsVoNew = new MovementsVoNew();
-        //TODO
-        return movementsVoNew;
+        MovementsVoNew vo = new MovementsVoNew();
+        vo.setId(movement.getId().toHexString());
+        vo.setNickname(userInfo.getNickname());
+        vo.setUserId(movement.getUserId());
+        vo.setAvatar(userInfo.getAvatar());
+        vo.setCreateDate(movement.getCreated().toString());
+        vo.setTextContent(movement.getTextContent());
+        vo.setImageContent(movement.getMedias().toArray(new String[0]));
+        vo.setState(movement.getState());
+        vo.setCommentCount(movement.getCommentCount());
+        vo.setLikeCount(movement.getLikeCount());
+        return vo;
     }
-
 }

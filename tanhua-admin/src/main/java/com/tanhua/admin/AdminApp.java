@@ -9,9 +9,9 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
 @MapperScan("com.tanhua.admin.mapper")
-public class AdminAppl {
+public class AdminApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(AdminAppl.class,args);
+        SpringApplication.run(AdminApp.class,args);
     }
 }

@@ -5,10 +5,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.tanhua.api.db.UserInfoServiceApi;
 import com.itheima.tanhua.mapper.UserInfoMapper;
 import com.itheima.tanhua.pojo.db.UserInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @DubboService //发布到注册中心
+@Slf4j
 public class UserInfoServiceImpl implements UserInfoServiceApi {
 
     @Autowired
@@ -103,6 +106,17 @@ public class UserInfoServiceImpl implements UserInfoServiceApi {
                 new LambdaQueryWrapper<UserInfo>().in(UserInfo::getId,friendIds)
                         .like(StrUtil.isNotBlank(keyword),UserInfo::getNickname,keyword));
         return userInfoPage.getRecords();
+    }
+
+    @Override
+    public IPage<UserInfo> findPageUsers(Integer page, Integer pagesize) {
+
+        IPage<UserInfo> iPage = new Page<>(page, pagesize);
+        LambdaQueryWrapper<UserInfo> lqw = new LambdaQueryWrapper<>();
+        lqw.orderByDesc(UserInfo::getUpdated);
+        userInfoMapper.selectPage(iPage, lqw);
+        log.info("数据为{}",iPage.getRecords());
+        return iPage;
     }
 
 

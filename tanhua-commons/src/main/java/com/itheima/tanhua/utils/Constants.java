@@ -12,6 +12,8 @@ public class Constants {
     //冻结用户状态KEY
     public static final String USER_FREEZE = "USER_FREEZE_";
 
+    //token获取userId
+    public static final String USER_ID = "AUTH_USER_ID";
     //冻结HashKEY
     public static final String FREEZE_USER = "FREEZE_USER_";
 

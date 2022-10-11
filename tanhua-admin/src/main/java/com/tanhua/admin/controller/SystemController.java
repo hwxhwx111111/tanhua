@@ -68,6 +68,7 @@ public class SystemController {
         Map<String,String> retMap = adminService.login(map);
         return ResponseEntity.ok(retMap);
     }
+
     /**
      * @description: 用户基本信息
      * @author: 黄伟兴
@@ -79,7 +80,6 @@ public class SystemController {
     public ResponseEntity profile(){
         Admin admin=adminService.profile();
         return ResponseEntity.ok(admin);
-
     }
 
     /**

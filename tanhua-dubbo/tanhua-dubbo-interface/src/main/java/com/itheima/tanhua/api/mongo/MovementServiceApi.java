@@ -25,7 +25,6 @@ public interface MovementServiceApi {
      **/
     List<Movement> findMovementByUserId(Long userId, Integer page, Integer pagesize);
 
-
     /**
      * @description: 查询好友动态
      * @author: 黄伟兴
@@ -53,5 +52,57 @@ public interface MovementServiceApi {
      **/
     List<Movement> randomMovements(Integer pagesize);
 
+    /**
+     * @description: 根据动态id查询动态
+     * @author: 黄伟兴
+     * @date: 2022/10/11 16:45
+     * @param: [movementId]
+     * @return: com.itheima.tanhua.pojo.mongo.Movement
+     **/
     Movement findMovementByMovementId(String movementId);
+
+    /**
+     * @description: 后台-根据用户id和动态状态分页查询动态
+     * @author: 黄伟兴
+     * @date: 2022/10/11 16:45
+     * @param: [uid, state, page, pagesize]
+     * @return: java.util.List<com.itheima.tanhua.pojo.mongo.Movement>
+     **/
+    List<Movement> findMovementByIdAndState(Long uid, Integer state, Integer page, Integer pagesize);
+
+    /**
+     * @description: 动态置顶
+     * @author: 黄伟兴
+     * @date: 2022/10/11 17:24
+     * @param: [movementId]
+     * @return: java.lang.Boolean
+     **/
+    Boolean setMovementTop(String movementId);
+
+    /**
+     * @description: 取消动态置顶
+     * @author: 黄伟兴
+     * @date: 2022/10/11 17:30
+     * @param: [movementId]
+     * @return: java.lang.String
+     **/
+    Boolean divestMovementTop(String movementId);
+
+    /**
+     * @description: 动态通过
+     * @author: 黄伟兴
+     * @date: 2022/10/11 17:48
+     * @param: [movementId]
+     * @return: com.itheima.tanhua.vo.mongo.MovementsVoNew
+     **/
+    Boolean approveMovement(String[] movementId);
+
+    /**
+     * @description: 动态拒绝
+     * @author: 黄伟兴
+     * @date: 2022/10/11 17:59
+     * @param: [movementIds]
+     * @return: java.lang.Boolean
+     **/
+    Boolean rejectMovement(String[] movementIds);
 }

@@ -45,7 +45,10 @@ public class MovementController {
      * @return: org.springframework.http.ResponseEntity
      **/
     @GetMapping("/all")
-    public ResponseEntity<PageResult<MovementsVo>> findMovementById(@RequestParam Long userId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "pagesize", defaultValue = "10") Integer pagesize) {
+    public ResponseEntity<PageResult<MovementsVo>> findMovementById(
+            @RequestParam Long userId,
+            @RequestParam(value = "page", defaultValue = "1")
+                    Integer page, @RequestParam(value = "pagesize", defaultValue = "10") Integer pagesize) {
         PageResult<MovementsVo> result = movementService.findMovementById(userId, page, pagesize);
         return ResponseEntity.ok(result);
     }
@@ -140,7 +143,6 @@ public class MovementController {
         Integer likeCount = commentService.unLove(movementId);
         return ResponseEntity.ok(likeCount);
     }
-
 
     /**
      * @description: 谁看过我

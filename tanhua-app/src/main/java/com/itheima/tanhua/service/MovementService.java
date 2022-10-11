@@ -33,11 +33,6 @@ import java.util.stream.Collectors;
 @Service
 public class MovementService {
 
-    @DubboReference
-    private MovementServiceApi movementServiceApi;
-
-    @DubboReference
-    private UserInfoServiceApi userInfoServiceApi;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -47,6 +42,12 @@ public class MovementService {
 
     @Autowired
     private TimeLineService timeLineService;
+
+    @DubboReference
+    private MovementServiceApi movementServiceApi;
+
+    @DubboReference
+    private UserInfoServiceApi userInfoServiceApi;
 
     @DubboReference
     private VisitorsServiceApi visitorsServiceApi;
@@ -110,9 +111,6 @@ public class MovementService {
             userId = Convert.toLong(redisTemplate.opsForValue().get("AUTH_USER_ID"));
         }
 
-        //1.当前用户的数据  从mysql中
-        UserInfo userInfo = userInfoServiceApi.findById(userId);
-
         //2.当前用户发布的动态数据  从mongodb中
         List<Movement> movementList = movementServiceApi.findMovementByUserId(userId, page, pagesize);
 
@@ -120,10 +118,11 @@ public class MovementService {
         PageResult<MovementsVo> pageResult = getPageResultOfVoList(page, pagesize, movementList);
 
         //清除redis
-        // redisTemplate.delete("AUTH_USER_ID");
+        //redisTemplate.delete("AUTH_USER_ID");
 
         return pageResult;
     }
+
     /**
      * @description: 根据单条动态
      * @author: 黄伟兴
@@ -141,7 +140,6 @@ public class MovementService {
             return null;
         }
     }
-
 
     /**
      * @description: 查询好友动态
@@ -213,8 +211,6 @@ public class MovementService {
         //6.封装数据，返回数据
         return getPageResultOfVoList(page, pagesize, movementList);
     }
-
-
 
     //封装返回结果1
     private PageResult<MovementsVo> getPageResultOfVoList(Integer page, Integer pagesize, List<Movement> movementList) {
@@ -318,17 +314,17 @@ public class MovementService {
      * @return: java.util.List<com.itheima.tanhua.vo.mongo.VisitorsVo>
      **/
     public List<VisitorsVo> queryVisitorsList() {
-      String  currentUserId = redisTemplate.opsForValue().get("AUTH_USER_ID");
+        String currentUserId = redisTemplate.opsForValue().get("AUTH_USER_ID");
 
         //1.查询访问时间
         String key = Constants.VISITORS_USER;
         String hashKey = currentUserId;
-        String value = (String) redisTemplate.opsForHash().get(key,hashKey);
-        Long date = StringUtils.isEmpty(value)?null:Long.valueOf(value);
+        String value = (String) redisTemplate.opsForHash().get(key, hashKey);
+        Long date = StringUtils.isEmpty(value) ? null : Long.valueOf(value);
 
         //2.调用API查询数据列表 List<Visitors>
-        List<Visitors> list = visitorsServiceApi.queryMyVisitors(date,Convert.toLong(currentUserId));
-        if(CollUtil.isEmpty(list)){
+        List<Visitors> list = visitorsServiceApi.queryMyVisitors(date, Convert.toLong(currentUserId));
+        if (CollUtil.isEmpty(list)) {
             return new ArrayList<>();
         }
         //3.提取用户id
@@ -341,11 +337,13 @@ public class MovementService {
         ArrayList<VisitorsVo> vos = new ArrayList<>();
         for (Visitors visitors : list) {
             UserInfo userInfo = map.get(visitors.getVisitorUserId());
-            if(userInfo!=null){
+            if (userInfo != null) {
                 VisitorsVo vo = VisitorsVo.init(userInfo, visitors);
                 vos.add(vo);
             }
         }
         return vos;
     }
+
+
 }

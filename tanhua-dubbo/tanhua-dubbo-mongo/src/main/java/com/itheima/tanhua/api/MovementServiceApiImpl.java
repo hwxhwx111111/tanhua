@@ -118,4 +118,72 @@ public class MovementServiceApiImpl implements MovementServiceApi {
 
         return mongoTemplate.findById(movementId,Movement.class);
     }
+
+    /**
+     * @description: 后台-根据用户id和动态状态分页查询动态
+     * @author: 黄伟兴
+     * @date: 2022/10/11 16:45
+     * @param: [uid, state, page, pagesize]
+     * @return: java.util.List<com.itheima.tanhua.pojo.mongo.Movement>
+     **/
+    @Override
+    public List<Movement> findMovementByIdAndState(Long uid, Integer state, Integer page, Integer pagesize) {
+        Query query = Query.query(Criteria.where("userId").is(uid).and("state").is(state))
+                .skip((page-1)*pagesize)
+                .limit(pagesize)
+                .with(Sort.by(Sort.Order.desc("created"))); //按发布时间降序
+
+        List<Movement> movements = mongoTemplate.find(query, Movement.class);
+        return movements;
+    }
+
+    /**
+     * @description: 动态置顶
+     * @author: 黄伟兴
+     * @date: 2022/10/11 17:25
+     * @param: [movementId]
+     * @return: java.lang.Boolean
+     **/
+    @Override
+    public Boolean setMovementTop(String movementId) {
+
+        //TODO 待解决
+
+
+        return true;
+    }
+
+    @Override
+    public Boolean divestMovementTop(String movementId) {
+        //TODO 待解决
+
+
+        return true;
+    }
+
+    /**
+     * @description: 动态通过
+     * @author: 黄伟兴
+     * @date: 2022/10/11 17:48
+     * @param: [movementId]
+     * @return: com.itheima.tanhua.vo.mongo.MovementsVoNew
+     **/
+    @Override
+    public Boolean approveMovement(String[] movementId) {
+        //TODO 待解决
+        return true;
+    }
+
+    /**
+     * @description: 动态拒绝
+     * @author: 黄伟兴
+     * @date: 2022/10/11 18:00
+     * @param: [movementIds]
+     * @return: java.lang.Boolean
+     **/
+    @Override
+    public Boolean rejectMovement(String[] movementIds) {
+        //TODO 待解决
+        return true;
+    }
 }

@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("manage/users")
+@RequestMapping("manage")
 public class ManageController {
     @Autowired
     private ManageService manageService;
-
 
 
     /**
@@ -26,10 +25,9 @@ public class ManageController {
      * @param pagesize
      * @return
      */
-    @GetMapping
+    @GetMapping("users")
     public ResponseEntity users(@RequestParam(defaultValue = "1") Integer page,
-                                @RequestParam(defaultValue = "10") Integer pagesize)
-    {
+                                @RequestParam(defaultValue = "10") Integer pagesize) {
         PageResult result = manageService.findPageUsers(page, pagesize);
         return ResponseEntity.ok(result);
     }
@@ -40,7 +38,7 @@ public class ManageController {
      * @param userID
      * @return
      */
-    @GetMapping("{userID}")
+    @GetMapping("/users/{userID}")
     public ResponseEntity findByUserId(@PathVariable String userID) {
         UsersInfoVo usersInfoVo = manageService.findByUserId(userID);
         return ResponseEntity.ok(usersInfoVo);
@@ -48,10 +46,11 @@ public class ManageController {
 
     /**
      * 冻结用户
+     *
      * @param freezeDto
      * @return
      */
-    @PostMapping("freeze")
+    @PostMapping("/users/freeze")
     public ResponseEntity freeze(@RequestBody FreezeDto freezeDto) {
         manageService.freeze(freezeDto);
         return ResponseEntity.ok("冻结成功");
@@ -59,14 +58,15 @@ public class ManageController {
 
     /**
      * 冻结用户
+     *
      * @param param : userId-用户id reasonsForThawing-解冻原因
      * @return
      */
-    @PostMapping("unfreeze")
+    @PostMapping("/users/unfreeze")
     public ResponseEntity unfreeze(@RequestBody Map param) {
         Integer userId = Convert.toInt(param.get("userId"));
         String frozenRemarks = Convert.toStr(param.get("frozenRemarks"));
-        manageService.unfreeze(userId,frozenRemarks);
+        manageService.unfreeze(userId, frozenRemarks);
         return ResponseEntity.ok("解冻成功");
     }
 }

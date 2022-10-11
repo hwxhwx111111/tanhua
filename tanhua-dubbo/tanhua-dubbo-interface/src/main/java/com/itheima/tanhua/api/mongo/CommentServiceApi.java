@@ -43,4 +43,5 @@ public interface CommentServiceApi {
      **/
     Integer remove(Comment comment);
 
+    Long count(String messageID, int type);
 }

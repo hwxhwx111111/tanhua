@@ -159,5 +159,31 @@ public class ManageController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 评论列表
+     * @param page
+     * @param pagesize
+     * @param messageID
+     * @return
+     */
+    @GetMapping({"messages/comments"})
+    public ResponseEntity comments(@RequestParam(defaultValue = "1") Integer page,
+                                   @RequestParam(defaultValue = "10") Integer pagesize, String messageID) {
+        PageResult result = manageService.comments(page, pagesize, messageID);
+        return ResponseEntity.ok(result);
+    }
 
+    /**
+     * 视频记录
+     * @param page
+     * @param pagesize
+     * @param uid
+     * @return
+     */
+    @GetMapping({"videos"})
+    public ResponseEntity videos(@RequestParam(defaultValue = "1") Integer page,
+                                 @RequestParam(defaultValue = "10") Integer pagesize, String uid) {
+        PageResult result = manageService.videos(page, pagesize, uid);
+        return ResponseEntity.ok(result);
+    }
 }

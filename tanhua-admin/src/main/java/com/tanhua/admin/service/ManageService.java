@@ -5,22 +5,27 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.itheima.tanhua.api.db.UserInfoServiceApi;
+import com.itheima.tanhua.api.mongo.CommentServiceApi;
 import com.itheima.tanhua.api.mongo.MovementServiceApi;
+import com.itheima.tanhua.api.mongo.VideoServiceApi;
 import com.itheima.tanhua.dto.db.FreezeDto;
 import com.itheima.tanhua.enums.FreezingTime;
 import com.itheima.tanhua.enums.UserStatus;
 import com.itheima.tanhua.pojo.db.UserInfo;
+import com.itheima.tanhua.pojo.mongo.Comment;
+import com.itheima.tanhua.pojo.mongo.CommentType;
 import com.itheima.tanhua.pojo.mongo.Movement;
 import com.itheima.tanhua.utils.Constants;
 import com.itheima.tanhua.vo.db.UsersInfoVo;
-import com.itheima.tanhua.vo.mongo.MovementsVoNew;
-import com.itheima.tanhua.vo.mongo.PageResult;
+import com.itheima.tanhua.vo.mongo.*;
+import lombok.Data;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +38,10 @@ public class ManageService {
 
     @DubboReference
     private MovementServiceApi movementServiceApi;
-
+@DubboReference
+private CommentServiceApi commentServiceApi;
+@DubboReference
+private VideoServiceApi videoServiceApi;
 
     public PageResult findPageUsers(Integer page, Integer pagesize) {
         IPage<UserInfo> ipage = userInfoServiceApi.findPageUsers(page, pagesize);
@@ -186,5 +194,40 @@ public class ManageService {
      **/
     public MovementsVoNew findMovementById1(String movementId) {
         return null;
+    }
+
+    public PageResult comments(Integer page, Integer pagesize, String messageID) {
+        List<Comment> comments = commentServiceApi.findComments(messageID, CommentType.COMMENT, page, pagesize);
+        Long counts = commentServiceApi.count(messageID, CommentType.COMMENT.getType());
+        List<CommentVoNew> list = new ArrayList();
+        for (Comment comment : comments) {
+
+            Long userId = comment.getUserId();
+            UserInfo userInfo = userInfoServiceApi.findById(userId);
+            CommentVoNew commentVoNew = new CommentVoNew();
+            BeanUtil.copyProperties(comment, commentVoNew, new String[0]);
+            commentVoNew.setCreateDate(comment.getCreated());
+            commentVoNew.setNickname(userInfo.getNickname());
+            list.add(commentVoNew);
+        }
+        PageResult<CommentVoNew> result = new PageResult(page, pagesize, counts, list);
+        return result;
+    }
+
+    public PageResult videos(Integer page, Integer pagesize, String uid) {
+        List<Video> videoList = videoServiceApi.findPageByUserId(page, pagesize, uid);
+        Long counts = videoServiceApi.count(uid);
+        List<VideoVoNew> list = new ArrayList();
+        for (Video video : videoList) {
+            VideoVoNew vo = new VideoVoNew();
+            BeanUtil.copyProperties(video, vo, new String[]{"id"});
+            vo.setId(video.getVid());
+            vo.setCreateDate(video.getCreated());
+            UserInfo userInfo = userInfoServiceApi.findById(video.getUserId());
+            vo.setNickname(userInfo.getNickname());
+            list.add(vo);
+        }
+        PageResult<VideoVoNew> result = new PageResult(page, pagesize, counts, list);
+        return result;
     }
 }

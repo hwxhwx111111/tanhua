@@ -132,4 +132,10 @@ public class CommentServiceApiImpl implements CommentServiceApi {
 
         return modify.statisCount(comment.getCommentType());
     }
+
+    @Override
+    public Long count(String messageID, int type) {
+        long count = this.mongoTemplate.count(Query.query(Criteria.where("publishId").is(messageID).and("content").is(type)), Comment.class);
+        return count;
+    }
 }

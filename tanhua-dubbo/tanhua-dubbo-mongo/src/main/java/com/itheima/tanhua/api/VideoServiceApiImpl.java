@@ -1,10 +1,12 @@
 package com.itheima.tanhua.api;
 
+import cn.hutool.core.convert.Convert;
 import com.itheima.tanhua.api.mongo.VideoServiceApi;
 import com.itheima.tanhua.utils.IdWorker;
 import com.itheima.tanhua.vo.mongo.Video;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -71,5 +73,17 @@ public class VideoServiceApiImpl implements VideoServiceApi {
     public List<Video> findVideosById(List<Long> vids) {
         Query query = Query.query(Criteria.where("vid").in(vids));
         return mongoTemplate.find(query,Video.class);
+    }
+
+    public List<Video> findPageByUserId(Integer page, Integer pagesize, String uid) {
+        Query query = Query.query(Criteria.where("userId").is(Convert.toLong(uid))).with(PageRequest.of(page - 1, pagesize, Sort.by(new Sort.Order[]{Sort.Order.desc("created")})));
+        List<Video> videoList = this.mongoTemplate.find(query, Video.class);
+        return videoList;
+    }
+
+    public Long count(String uid) {
+        Query query = Query.query(Criteria.where("userId").is(Convert.toLong(uid)));
+        long count = this.mongoTemplate.count(query, Video.class);
+        return count;
     }
 }

@@ -3,7 +3,7 @@ package com.tanhua.admin.interceptor;
 
 import com.itheima.tanhua.pojo.db.Admin;
 import com.tanhua.admin.service.AdminService;
-import com.tanhua.admin.utils.JwtUtil;
+import com.tanhua.admin.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         token = token.replace("Bearer ", "");
 
         //2、调用service根据token查询用户
-        Claims claims = JwtUtil.getClaimsBody(token);
+        Claims claims = JwtUtils.getClaims(token);
         Admin admin = new Admin();
         admin.setId(claims.get("id",Long.class));
         admin.setUsername(claims.get("username",String.class));

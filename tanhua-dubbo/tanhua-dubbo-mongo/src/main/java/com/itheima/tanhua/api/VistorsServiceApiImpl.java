@@ -2,6 +2,7 @@ package com.itheima.tanhua.api;
 
 import com.itheima.tanhua.api.mongo.VisitorsServiceApi;
 import com.itheima.tanhua.pojo.mongo.Visitors;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,6 +11,8 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 
+
+@DubboService
 public class VistorsServiceApiImpl implements VisitorsServiceApi {
 
     @Autowired

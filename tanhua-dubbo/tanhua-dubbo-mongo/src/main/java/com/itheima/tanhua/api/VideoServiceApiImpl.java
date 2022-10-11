@@ -37,7 +37,7 @@ public class VideoServiceApiImpl implements VideoServiceApi {
         video.setCreated(System.currentTimeMillis());
 
         //2.调用方法保存对象
-        mongoTemplate.save(video);
+       video = mongoTemplate.save(video);
 
         //3.返回对象id
         return video.getId().toHexString();

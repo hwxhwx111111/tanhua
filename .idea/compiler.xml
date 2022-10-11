@@ -14,6 +14,7 @@
         <module name="tanhua-app" />
         <module name="tanhua-dubbo-db" />
         <module name="tanhua-sso" />
+        <module name="tanhua-recommend" />
         <module name="tanhua-dubbo-mongo" />
         <module name="tanhua-gateway" />
         <module name="tanhua-admin" />
@@ -35,6 +36,7 @@
       <module name="tanhua-dubbo-interface" options="-parameters" />
       <module name="tanhua-dubbo-mongo" options="-parameters" />
       <module name="tanhua-gateway" options="-parameters" />
+      <module name="tanhua-recommend" options="-parameters" />
       <module name="tanhua-sso" options="-parameters" />
     </option>
   </component>

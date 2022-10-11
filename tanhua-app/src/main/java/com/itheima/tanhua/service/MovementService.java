@@ -124,6 +124,24 @@ public class MovementService {
 
         return pageResult;
     }
+    /**
+     * @description: 根据单条动态
+     * @author: 黄伟兴
+     * @date: 2022/9/25 20:32
+     * @param: [id]
+     * @return: org.springframework.http.ResponseEntity
+     **/
+    public MovementsVo findRecommendById(String movementId) {
+
+        Movement movement = movementServiceApi.findMovementByMovementId(movementId);
+
+        if (movement != null) {
+            return getPageResultOfVo(movement);
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * @description: 查询好友动态
@@ -196,23 +214,6 @@ public class MovementService {
         return getPageResultOfVoList(page, pagesize, movementList);
     }
 
-    /**
-     * @description: 根据单条动态
-     * @author: 黄伟兴
-     * @date: 2022/9/25 20:32
-     * @param: [id]
-     * @return: org.springframework.http.ResponseEntity
-     **/
-    public MovementsVo findRecommendById(String movementId) {
-
-        Movement movement = movementServiceApi.findMovementByMovementId(movementId);
-
-        if (movement != null) {
-            return getPageResultOfVo(movement);
-        } else {
-            return null;
-        }
-    }
 
 
     //封装返回结果1
@@ -310,23 +311,23 @@ public class MovementService {
 
 
     /**
-     * @description: 首页访客列表
+     * @description: 查询首页访客列表
      * @author: 黄伟兴
      * @date: 2022/10/5 19:05
      * @param: []
      * @return: java.util.List<com.itheima.tanhua.vo.mongo.VisitorsVo>
      **/
     public List<VisitorsVo> queryVisitorsList() {
-        Long currentUserId = Convert.toLong(redisTemplate.opsForValue().get("AUTH_USER_ID"));
-
+      String  currentUserId = redisTemplate.opsForValue().get("AUTH_USER_ID");
 
         //1.查询访问时间
         String key = Constants.VISITORS_USER;
-        String hashKey = String.valueOf(currentUserId);
+        String hashKey = currentUserId;
         String value = (String) redisTemplate.opsForHash().get(key,hashKey);
         Long date = StringUtils.isEmpty(value)?null:Long.valueOf(value);
+
         //2.调用API查询数据列表 List<Visitors>
-        List<Visitors> list = visitorsServiceApi.queryMyVisitors(date,currentUserId);
+        List<Visitors> list = visitorsServiceApi.queryMyVisitors(date,Convert.toLong(currentUserId));
         if(CollUtil.isEmpty(list)){
             return new ArrayList<>();
         }

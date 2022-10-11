@@ -24,6 +24,9 @@ dubbo:
     port: 20881
     name: dubbo
 
+  consumer:
+    check: false
+
 #mp配置
 mybatis-plus:
   global-config:

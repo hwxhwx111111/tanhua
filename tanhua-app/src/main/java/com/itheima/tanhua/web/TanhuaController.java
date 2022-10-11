@@ -1,7 +1,7 @@
 package com.itheima.tanhua.web;
 
 import cn.hutool.core.convert.Convert;
-import com.itheima.tanhua.api.mongo.VisitorsServiceApi;
+import com.itheima.tanhua.pojo.mongo.TodayBest;
 import com.itheima.tanhua.service.BaiduService;
 import com.itheima.tanhua.service.QuestionService;
 import com.itheima.tanhua.service.RecommendService;
@@ -9,7 +9,6 @@ import com.itheima.tanhua.service.TanhuaService;
 import com.itheima.tanhua.vo.mongo.NearUserVo;
 import com.itheima.tanhua.vo.mongo.PageResult;
 import com.itheima.tanhua.vo.mongo.TodayBestVo;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,8 +71,8 @@ public class TanhuaController {
      * @return: org.springframework.http.ResponseEntity
      **/
     @GetMapping("/{id}/personalInfo")
-    public ResponseEntity<TodayBestVo> personalInfo(@PathVariable("id") Long userId) {
-        TodayBestVo todayBestVo = recommendService.personalInfo(userId);
+    public ResponseEntity<TodayBest> personalInfo(@PathVariable("id") Long userId) {
+        TodayBest todayBestVo = recommendService.personalInfo(userId);
         return ResponseEntity.ok(todayBestVo);
     }
 

@@ -1,7 +1,6 @@
 package com.itheima.tanhua.api;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import com.itheima.tanhua.api.mongo.RecommendServiceApi;
 import com.itheima.tanhua.pojo.mongo.RecommendUser;
 import com.itheima.tanhua.pojo.mongo.UserLike;
@@ -68,10 +67,10 @@ public class RecommendServiceApiImpl implements RecommendServiceApi {
      * @return: java.lang.Integer
      **/
     @Override
-    public Integer findById(Long currentId, Long userId) {
+    public RecommendUser findById(Long currentId, Long userId) {
         Query query = Query.query(Criteria.where("toUserId").is(currentId).and("userId").is(userId));
         RecommendUser recommendUser = mongoTemplate.findOne(query, RecommendUser.class);
-        return Convert.toInt(recommendUser.getScore());
+        return recommendUser;
     }
 
     /**

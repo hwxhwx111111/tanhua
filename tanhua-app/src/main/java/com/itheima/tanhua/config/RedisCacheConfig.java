@@ -16,7 +16,7 @@ public class RedisCacheConfig {
     private static final Map<String, Duration> cacheMap;
 
     static {
-        cacheMap = ImmutableMap.<String, Duration>builder().put("videos", Duration.ofSeconds(30L)).build();
+        cacheMap = ImmutableMap.<String, Duration>builder().put("videos", Duration.ofSeconds(60L)).build();
     }
 
     //配置RedisCacheManagerBuilderCustomizer对象

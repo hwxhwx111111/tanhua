@@ -32,8 +32,12 @@ public class AuthFilter implements GlobalFilter {
         //1.获取request对象
         ServerHttpRequest request = exchange.getRequest();
         String uri = request.getURI().getPath();
-        if (StrUtil.equals(uri, "/user/login") || StrUtil.equals(uri, "/user/loginVerification")) {
+        if (StrUtil.equals(uri, "/user/login") || StrUtil.equals(uri, "/user/loginVerification")
+                ||StrUtil.equals(uri, "/system/users/verification")
+                ||StrUtil.equals(uri, "/system/users/login")) {
             //放行
+            System.out.println("----------------------------------------------------------------------------------------------");
+            System.out.println(uri);
             return chain.filter(exchange);
         }
 

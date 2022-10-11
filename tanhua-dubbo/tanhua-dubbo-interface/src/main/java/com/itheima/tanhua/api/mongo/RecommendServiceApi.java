@@ -19,7 +19,7 @@ public interface RecommendServiceApi {
 
     List<RecommendUser> findByToUId(Long uid,Integer page, Integer pagesize);
 
-    Integer findById(Long currentId, Long userId);
+    RecommendUser findById(Long currentId, Long userId);
 
     List<RecommendUser> queryCardList(Long userId, int count);
 }

@@ -29,9 +29,9 @@ public class SmallVideosController {
      * @return: org.springframework.http.ResponseEntity
      **/
     @PostMapping
-    public ResponseEntity saveVideos(MultipartFile videoThumbnail, MultipartFile videoFile) throws IOException {
+    public ResponseEntity<String> saveVideos(MultipartFile videoThumbnail, MultipartFile videoFile) throws IOException {
         smallVideosService.saveVideos(videoThumbnail,videoFile);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok("视频发布成功");
     }
 
     /**

@@ -51,6 +51,19 @@ public class MovementController {
     }
 
     /**
+     * @description: 查询单条动态
+     * @author: 黄伟兴
+     * @date: 2022/9/25 20:32
+     * @param: [id]
+     * @return: org.springframework.http.ResponseEntity
+     **/
+    @GetMapping("/{id}")
+    public ResponseEntity<MovementsVo> findRecommendById(@PathVariable("id") String movementId) {
+        MovementsVo result = movementService.findRecommendById(movementId);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
      * @description: 查询好友动态列表
      * @author: 黄伟兴
      * @date: 2022/9/24 10:45
@@ -75,20 +88,6 @@ public class MovementController {
         PageResult<MovementsVo> result = movementService.recommend(page, pagesize);
         return ResponseEntity.ok(result);
     }
-
-    /**
-     * @description: 查询单条动态
-     * @author: 黄伟兴
-     * @date: 2022/9/25 20:32
-     * @param: [id]
-     * @return: org.springframework.http.ResponseEntity
-     **/
-    @GetMapping("/{id}")
-    public ResponseEntity<MovementsVo> findRecommendById(@PathVariable("id") String movementId) {
-        MovementsVo result = movementService.findRecommendById(movementId);
-        return ResponseEntity.ok(result);
-    }
-
 
     /**
      * @description: 对动态进行点赞，根据动态的id
@@ -144,8 +143,12 @@ public class MovementController {
 
 
     /**
-     * 谁看过我
-     */
+     * @description: 谁看过我
+     * @author: 黄伟兴
+     * @date: 2022/10/6 15:15
+     * @param: []
+     * @return: org.springframework.http.ResponseEntity
+     **/
     @GetMapping("visitors")
     public ResponseEntity queryVisitorsList(){
         List<VisitorsVo> list = movementService.queryVisitorsList();

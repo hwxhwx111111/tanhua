@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,23 +71,21 @@ public class SmallVideosService {
      * @return: void
      **/
     public void saveVideos(MultipartFile videoThumbnail, MultipartFile videoFile) throws IOException {
-
         //当前登录者id
-        Long currentUserId = Convert.toLong(redisTemplate.opsForValue().get("AUTH_user_Id"));
-
+        Long currentUserId = Convert.toLong(redisTemplate.opsForValue().get("AUTH_USER_ID"));
 
         if (videoFile.isEmpty() || videoThumbnail.isEmpty()) {
-            throw new ConsumerException("视频上传失败");
+            throw new ConsumerException("视频文件或封面图片缺失");
         }
 
         //1.将视频上传到FastDFS,获取访问URL
         String filename = videoFile.getOriginalFilename();
         filename = filename.substring(filename.lastIndexOf(".") + 1);
         StorePath storePath = client.uploadFile(videoFile.getInputStream(), videoFile.getSize(), filename, null);
-        String videoUrl = webServer.getWebServerUrl() + storePath;
+        String videoUrl = webServer.getWebServerUrl() + storePath.getFullPath();
 
         //2.将封面图片上传到阿里云OSS，获取访问URL
-        String imageUrl = ossTemplate.upload(videoThumbnail.getOriginalFilename(), videoThumbnail.getInputStream());
+        String imageUrl = ossTemplate.upload(Objects.requireNonNull(videoThumbnail.getOriginalFilename()), videoThumbnail.getInputStream());
 
         //3.构建Videos对象
         Video video = new Video();
@@ -115,10 +110,8 @@ public class SmallVideosService {
      * @param: [page, pagesize]
      * @return: com.itheima.tanhua.vo.mongo.PageResult
      **/
-    @Cacheable(value = "videos",key =" #currentUserId+ '_'+  #page+ '_' + #pagesize " )
+    @Cacheable(value = "videos",key ="#currentUserId+ '_'+  #page+ '_' + #pagesize" )
     public PageResult findVideoList(Integer page, Integer pagesize,String currentUserId) {
-
-
 
         //1.查询redis数据
         String redisKey = Constants.VIDEOS_RECOMMEND + currentUserId;

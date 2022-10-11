@@ -21,6 +21,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -133,6 +134,17 @@ public class CommentService {
         String hashKey = Constants.MOVEMENT_LIKE_HASHKEY + userId;
         redisTemplate.opsForHash().put(key, hashKey, String.valueOf(1));
 
+
+        //TODO 待补充
+        Map<String,String> map = new HashMap<>();
+        map.put("userId",userId.toString());
+        map.put("busId",movementId);
+        map.put("type","0201");
+        map.put("date",System.currentTimeMillis()+"");
+        //向MQ发送消息
+        //rabbitTemplate.ConvertAndSend();
+
+
         //返回点赞数
         return count;
     }
@@ -166,6 +178,16 @@ public class CommentService {
         String key = Constants.MOVEMENTS_INTERACT_KEY + movementId;
         String hashKey = Constants.MOVEMENT_LIKE_HASHKEY + userId;
         redisTemplate.opsForHash().delete(key, hashKey);
+
+
+        Map<String,String> map = new HashMap<>();
+        map.put("userId",userId.toString());
+        map.put("busId",movementId);
+        map.put("type","0206");
+        map.put("date",System.currentTimeMillis()+"");
+        //向MQ发送消息
+
+
 
         //返回点赞数
         return count;

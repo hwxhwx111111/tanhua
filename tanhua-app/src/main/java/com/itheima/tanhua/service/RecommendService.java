@@ -1,8 +1,6 @@
 package com.itheima.tanhua.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.itheima.tanhua.api.db.UserInfoServiceApi;
 import com.itheima.tanhua.api.mongo.RecommendServiceApi;
@@ -10,6 +8,7 @@ import com.itheima.tanhua.api.mongo.VisitorsServiceApi;
 import com.itheima.tanhua.exception.ConsumerException;
 import com.itheima.tanhua.pojo.db.UserInfo;
 import com.itheima.tanhua.pojo.mongo.RecommendUser;
+import com.itheima.tanhua.pojo.mongo.TodayBest;
 import com.itheima.tanhua.pojo.mongo.Visitors;
 import com.itheima.tanhua.vo.mongo.PageResult;
 import com.itheima.tanhua.vo.mongo.TodayBestVo;
@@ -115,19 +114,14 @@ public class RecommendService {
      * @param: [userId]
      * @return: com.itheima.tanhua.vo.mongo.TodayBestVo
      **/
-    public TodayBestVo personalInfo(Long userId) {
-
-
+    public TodayBest personalInfo(Long userId) {
 
         Long uid = Convert.toLong(redisTemplate.opsForValue().get("AUTH_USER_ID"));
         //1、根据userId（当前点击的佳人id）查询用户信息
         UserInfo userInfo = userInfoServiceApi.findById(userId);
         //2、查询uid(当前登录者id)与userId（当前点击的佳人id）缘分值
-        Integer score = recommendServiceApi.findById(uid, userId);
+        RecommendUser user = recommendServiceApi.findById(uid, userId);
 
-        if (ObjectUtil.isNull(score)) {
-            score = 80;
-        }
 
         //当前登录者id
         Long currentUserId =Convert.toLong( redisTemplate.opsForValue().get("AUTH_USER_ID"));
@@ -139,18 +133,19 @@ public class RecommendService {
         visitors.setFrom("首页");
         visitors.setDate(System.currentTimeMillis());
         visitors.setVisitDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        visitors.setScore(Double.valueOf(score));
+        visitors.setScore(user.getScore());
         visitorsServiceApi.save(visitors);
 
 
         //3.构造返回值
-        TodayBestVo vo = new TodayBestVo();
-        BeanUtil.copyProperties(userInfo, vo);
-        vo.setTags(StrUtil.split(userInfo.getTags(), ","));
-        vo.setFateValue(score);
+//        TodayBestVo vo = new TodayBestVo();
+//        BeanUtil.copyProperties(userInfo, vo);
+//        vo.setTags(StrUtil.split(userInfo.getTags(), ","));
+//        vo.setFateValue(score);
 
 
-        return vo;
+        //3、构造返回值
+        return TodayBest.init(userInfo,user);
     }
 
     public List<RecommendUser> queryCardList(Long userId, int count) {

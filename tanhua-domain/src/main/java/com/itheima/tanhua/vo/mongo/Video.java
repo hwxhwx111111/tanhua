@@ -6,11 +6,13 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "video")
-public class Video implements java.io.Serializable {
+public class Video implements Serializable {
 
     private static final long serialVersionUID = -3136732836884933873L;
 

@@ -17,6 +17,7 @@
         <module>tanhua-sso</module>
         <module>tanhua-gateway</module>
         <module>tanhua-admin</module>
+        <module>tanhua-recommend</module>
     </modules>
 
 

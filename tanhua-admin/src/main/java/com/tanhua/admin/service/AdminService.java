@@ -1,9 +1,11 @@
 package com.tanhua.admin.service;
 
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.tanhua.pojo.db.Admin;
+import com.itheima.tanhua.utils.AppJwtUtil;
 import com.itheima.tanhua.utils.Constants;
 import com.tanhua.admin.exception.BusinessException;
 import com.tanhua.admin.mapper.AdminMapper;
@@ -70,11 +72,11 @@ public class AdminService {
         }
 
         //6、通过JWT生成token
-        Map<String, Object> claims = new HashMap<String, Object>();
+/*        Map<String, Object> claims = new HashMap<String, Object>();
         claims.put("username", username);
         claims.put("id", admin.getId());
-        String token = JwtUtils.getToken(claims);
-
+        String token = JwtUtils.getToken(claims);*/
+        String token = AppJwtUtil.getToken(admin.getId());
         //8、构造返回值
         Map res = new HashMap();
         res.put("token", token);
@@ -83,5 +85,9 @@ public class AdminService {
         return res;
     }
 
-
+    public Admin profile() {
+        Long id = Convert.toLong(redisTemplate.opsForValue().get(Constants.USER_ID));
+        Admin admin = adminMapper.selectById(id);
+        return admin;
+    }
 }

@@ -1,5 +1,6 @@
 package com.itheima.tanhua.api.db;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.itheima.tanhua.pojo.db.UserInfo;
 
 import java.util.List;
@@ -52,4 +53,12 @@ public interface UserInfoServiceApi {
      * @return: java.util.List<com.itheima.tanhua.pojo.db.UserInfo>
      **/
     List<UserInfo> findPageByIds(List<Long> friendIds, Integer page, Integer pagesize, String keyword);
+
+    /**
+     * 分页查询用户信息
+     * @param page
+     * @param pagesize
+     * @return
+     */
+    IPage<UserInfo> findPageUsers(Integer page, Integer pagesize);
 }

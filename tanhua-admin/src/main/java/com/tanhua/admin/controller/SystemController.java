@@ -3,6 +3,7 @@ package com.tanhua.admin.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
+import com.itheima.tanhua.pojo.db.Admin;
 import com.itheima.tanhua.utils.Constants;
 import com.tanhua.admin.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,23 @@ public class SystemController {
         Map retMap = adminService.login(map);
         return ResponseEntity.ok(retMap);
     }
+    /**
+     * 用户基本信息
+     * @return
+     */
+    @PostMapping("profile")
+    public ResponseEntity profile(){
+        Admin admin=adminService.profile();
+        return ResponseEntity.ok(admin);
 
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity logout(){
+        //清除redis中的用户id
+        redisTemplate.delete(Constants.USER_ID);
+        return ResponseEntity.ok(null);
+    }
 
 
 }

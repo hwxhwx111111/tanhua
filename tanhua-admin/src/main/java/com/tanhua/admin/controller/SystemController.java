@@ -80,6 +80,7 @@ public class SystemController {
     public ResponseEntity profile(){
         Admin admin=adminService.profile();
         return ResponseEntity.ok(admin);
+
     }
 
     /**

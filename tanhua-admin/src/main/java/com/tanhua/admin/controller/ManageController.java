@@ -1,6 +1,8 @@
 package com.tanhua.admin.controller;
 
 import cn.hutool.core.convert.Convert;
+import com.itheima.tanhua.dto.db.FreezeDto;
+import com.itheima.tanhua.vo.db.UsersInfoVo;
 import com.itheima.tanhua.vo.mongo.MovementsVoNew;
 import com.itheima.tanhua.vo.mongo.PageResult;
 import com.tanhua.admin.service.ManageService;
@@ -18,12 +20,56 @@ public class ManageController {
     private ManageService manageService;
 
 
+    /**
+     * 用户数据翻页
+     *
+     * @param page
+     * @param pagesize
+     * @return
+     */
     @GetMapping("/users")
     public ResponseEntity users(@RequestParam(defaultValue = "1") Integer page,
-                                @RequestParam(defaultValue = "10") Integer pagesize)
-    {
-        PageResult result =  manageService.findPageUsers(page,pagesize);
+                                @RequestParam(defaultValue = "10") Integer pagesize) {
+        PageResult result = manageService.findPageUsers(page, pagesize);
         return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 用户基本资料
+     *
+     * @param userID
+     * @return
+     */
+    @GetMapping("/users/{userID}")
+    public ResponseEntity findByUserId(@PathVariable String userID) {
+        UsersInfoVo usersInfoVo = manageService.findByUserId(userID);
+        return ResponseEntity.ok(usersInfoVo);
+    }
+
+    /**
+     * 冻结用户
+     *
+     * @param freezeDto
+     * @return
+     */
+    @PostMapping("/users/freeze")
+    public ResponseEntity freeze(@RequestBody FreezeDto freezeDto) {
+        manageService.freeze(freezeDto);
+        return ResponseEntity.ok("冻结成功");
+    }
+
+    /**
+     * 冻结用户
+     *
+     * @param param : userId-用户id reasonsForThawing-解冻原因
+     * @return
+     */
+    @PostMapping("/users/unfreeze")
+    public ResponseEntity unfreeze(@RequestBody Map param) {
+        Integer userId = Convert.toInt(param.get("userId"));
+        String frozenRemarks = Convert.toStr(param.get("frozenRemarks"));
+        manageService.unfreeze(userId, frozenRemarks);
+        return ResponseEntity.ok("解冻成功");
     }
 
 
@@ -36,8 +82,8 @@ public class ManageController {
      **/
     @GetMapping("/messages")
     public ResponseEntity<PageResult<MovementsVoNew>> messages(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                            @RequestParam(value = "pagesize", defaultValue = "10") Integer pagesize,
-                                                            Map<String, String> param) {
+                                                               @RequestParam(value = "pagesize", defaultValue = "10") Integer pagesize,
+                                                               Map<String, String> param) {
 
         Long uid = Convert.toLong(param.get("uid"));
         Integer state = Convert.toInt(param.get("state"));
@@ -96,7 +142,7 @@ public class ManageController {
     @GetMapping("/messages/pass")
     public ResponseEntity<String> approveMovement(@RequestBody String[] movementIds) {
         String result = manageService.approveMovement(movementIds);
-        return  ResponseEntity.ok(result);
+        return ResponseEntity.ok(result);
     }
 
 
@@ -110,7 +156,7 @@ public class ManageController {
     @GetMapping("/messages/reject")
     public ResponseEntity<String> rejectMovement(@RequestBody String[] movementIds) {
         String result = manageService.rejectMovement(movementIds);
-        return  ResponseEntity.ok(result);
+        return ResponseEntity.ok(result);
     }
 
 

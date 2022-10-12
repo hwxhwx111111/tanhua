@@ -138,4 +138,13 @@ public class CommentServiceApiImpl implements CommentServiceApi {
         long count = this.mongoTemplate.count(Query.query(Criteria.where("publishId").is(messageID).and("content").is(type)), Comment.class);
         return count;
     }
+
+
+
+    @Override
+    public List<Comment> findById(Long userId, CommentType like) {
+        Query query= Query.query(Criteria.where("userId").is(userId).and("commentType").is(like.getType()));
+        List<Comment> commentList = mongoTemplate.find(query, Comment.class);
+        return commentList;
+    }
 }

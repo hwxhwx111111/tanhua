@@ -156,4 +156,16 @@ public class MovementController {
         List<VisitorsVo> list = movementService.queryVisitorsList();
         return ResponseEntity.ok(list);
     }
+
+    /**
+     * 不感兴趣
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/noInterest")
+    public ResponseEntity noInterest(@PathVariable String id){
+        movementService.noInterest(id);
+        return ResponseEntity.ok(null);
+    }
+
 }

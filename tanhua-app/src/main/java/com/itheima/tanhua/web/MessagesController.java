@@ -1,6 +1,8 @@
 package com.itheima.tanhua.web;
 
 import cn.hutool.core.convert.Convert;
+import com.itheima.tanhua.pojo.db.Announcement;
+import com.itheima.tanhua.pojo.db.AnnouncementVo;
 import com.itheima.tanhua.service.FriendService;
 import com.itheima.tanhua.service.MessagesService;
 import com.itheima.tanhua.vo.db.UserInfoVo;
@@ -65,5 +67,64 @@ public class MessagesController {
                                        @RequestParam(defaultValue = "1") String keyword){
        PageResult<ContactVo> result =  messagesService.findContacts(page,pagesize,keyword);
        return ResponseEntity.ok(result);
+    }
+
+
+    /**
+     * 公告列表
+     * @param page
+     * @param pagesize
+     * @return
+     */
+    @GetMapping("announcements")
+    public ResponseEntity<PageResult> announcements(@RequestParam(value = "page",defaultValue = "1") Integer page,
+                                                                    @RequestParam(value = "pagesize",defaultValue = "10") Integer pagesize)
+    {
+        PageResult result= messagesService.announcements(page,pagesize);
+        return ResponseEntity.ok(result);
+    }
+
+
+    /**
+     * 喜欢列表
+     * @param page
+     * @param pagesize
+     * @return
+     */
+    @GetMapping("loves")
+    public ResponseEntity<PageResult> loves(@RequestParam(value = "page",defaultValue = "1") Integer page,
+                                    @RequestParam(value = "pagesize",defaultValue = "10") Integer pagesize){
+
+
+        PageResult result= messagesService.loves(page,pagesize);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 点赞列表
+     * @param page
+     * @param pagesize
+     * @return
+     */
+    @GetMapping("likes")
+    public PageResult likes(@RequestParam(value = "page",defaultValue = "1") Integer page,
+                            @RequestParam(value = "pagesize",defaultValue = "10") Integer pagesize){
+
+        PageResult result= messagesService.likes(page,pagesize);
+        return result;
+    }
+
+    /**
+     * 评论列表
+     * @param page
+     * @param pagesize
+     * @return
+     */
+    @GetMapping("comments")
+    public PageResult comments(@RequestParam(value = "page",defaultValue = "1") Integer page,
+                            @RequestParam(value = "pagesize",defaultValue = "10") Integer pagesize){
+
+        PageResult result= messagesService.comments(page,pagesize);
+        return result;
     }
 }

@@ -46,10 +46,33 @@ public class CommentController {
      * @return: org.springframework.http.ResponseEntity
      **/
     @GetMapping
-    public ResponseEntity<PageResult<CommentVo>> findComments(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "pagesize", defaultValue = "10") Integer pagesize, @RequestParam(value = "movementId") String movementId) {
+    public ResponseEntity<PageResult<CommentVo>> findComments(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                              @RequestParam(value = "pagesize", defaultValue = "10") Integer pagesize,
+                                                              @RequestParam(value = "movementId") String movementId) {
         PageResult<CommentVo> result = commentService.findComments(page, pagesize, movementId);
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 点赞数
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/like")
+    public ResponseEntity like(@PathVariable String id){
+        Integer count=commentService.like(id);
+        return ResponseEntity.ok(count);
+    }
 
+    /**
+     * 取消点赞
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/dislike")
+    public ResponseEntity dislike(@PathVariable String id){
+        Integer count=commentService.dislike(id);
+
+        return ResponseEntity.ok(count);
+    }
 }

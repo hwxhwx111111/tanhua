@@ -3,6 +3,7 @@ package com.itheima.tanhua.api;
 import cn.hutool.core.collection.CollUtil;
 import com.itheima.tanhua.api.mongo.MovementServiceApi;
 import com.itheima.tanhua.pojo.mongo.Movement;
+import com.itheima.tanhua.pojo.mongo.UserLike;
 import com.itheima.tanhua.utils.IdWorker;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.bson.types.ObjectId;
@@ -115,10 +116,21 @@ public class MovementServiceApiImpl implements MovementServiceApi {
         return results.getMappedResults();
     }
 
+    /**
+     * 根据动态id查询
+     * @param movementId
+     * @return
+     */
     @Override
     public Movement findMovementByMovementId(String movementId) {
+        Movement movement = mongoTemplate.findById(movementId, Movement.class);
+        return movement;
+    }
 
         return mongoTemplate.findById(movementId, Movement.class);
+    @Override
+    public void save(UserLike userLike) {
+        mongoTemplate.save(userLike);
     }
 
     /**

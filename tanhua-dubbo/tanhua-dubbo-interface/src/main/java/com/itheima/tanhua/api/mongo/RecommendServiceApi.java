@@ -22,4 +22,6 @@ public interface RecommendServiceApi {
     RecommendUser findById(Long currentId, Long userId);
 
     List<RecommendUser> queryCardList(Long userId, int count);
+
+    Integer fateValue(Long userId, String toUserId);
 }

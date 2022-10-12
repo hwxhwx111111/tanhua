@@ -5,11 +5,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import com.itheima.tanhua.api.db.UserInfoServiceApi;
 import com.itheima.tanhua.api.mongo.CommentServiceApi;
+import com.itheima.tanhua.api.mongo.MovementServiceApi;
 import com.itheima.tanhua.exception.BusinessException;
 import com.itheima.tanhua.exception.ErrorResult;
 import com.itheima.tanhua.pojo.db.UserInfo;
 import com.itheima.tanhua.pojo.mongo.Comment;
 import com.itheima.tanhua.pojo.mongo.CommentType;
+import com.itheima.tanhua.pojo.mongo.Movement;
 import com.itheima.tanhua.utils.Constants;
 import com.itheima.tanhua.vo.mongo.CommentVo;
 import com.itheima.tanhua.vo.mongo.PageResult;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.management.Query;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,9 @@ public class CommentService {
 
     @DubboReference
     private CommentServiceApi commentServiceApi;
+
+    @DubboReference
+    private MovementServiceApi movementServiceApi;
 
     @DubboReference
     private UserInfoServiceApi userInfoServiceApi;
@@ -265,5 +271,32 @@ public class CommentService {
 
         //返回喜欢数
         return count;
+    }
+
+    /**
+     * 取消点赞
+     * @param id
+     * @return
+     */
+    public Integer dislike(String id) {
+        List<Long>pids=new ArrayList<>();
+        pids.add(Convert.toLong(id));
+        List<Movement> movement = movementServiceApi.findMovementByPids(pids);
+        Integer count=0;
+        for (Movement movement1 : movement) {
+            ObjectId movementId = movement1.getId();
+            count=disLike(Convert.toStr(movementId));
+        }
+        return count;
+    }
+
+    public List<Comment> findById(Long userId) {
+        List<Comment> commentList = commentServiceApi.findById(userId,CommentType.LIKE);
+        return commentList;
+    }
+
+    public List<Comment> findByIdLike(Long userId) {
+        List<Comment> commentList = commentServiceApi.findById(userId,CommentType.COMMENT);
+        return commentList;
     }
 }

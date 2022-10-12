@@ -9,12 +9,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.util.List;
+
 @DubboService
 public class UserLikeServiceApiImpl implements UserLikeServiceApi {
 
     @Autowired
     private MongoTemplate mongoTemplate;
-
     /**
      * @description: 喜欢或者不喜欢
      * @author: 黄伟兴
@@ -49,5 +50,41 @@ public class UserLikeServiceApiImpl implements UserLikeServiceApi {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * 判断userlike是否有数据
+     * @param userId
+     * @param uid
+     * @return
+     */
+    @Override
+    public boolean isLike(String uid, Long userId) {
+        try {
+            Query query= Query.query(Criteria.where("userId").is(userId).and("likeUserId").is(uid));
+            UserLike userLike = mongoTemplate.findOne(query, UserLike.class);
+            if (userLike==null){
+                return false;
+            }else {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public List<UserLike> fendByIdLove(Long userId) {
+        Query query= Query.query(Criteria.where("userId").is(userId).and("isLike").is(true));
+        List<UserLike> userLikeList = mongoTemplate.find(query, UserLike.class);
+        return userLikeList;
+    }
+
+    @Override
+    public List<UserLike> fendByIdLike(Long userId) {
+        Query query= Query.query(Criteria.where("userId").is(userId));
+        List<UserLike> userLikeList = mongoTemplate.find(query, UserLike.class);
+        return userLikeList;
     }
 }

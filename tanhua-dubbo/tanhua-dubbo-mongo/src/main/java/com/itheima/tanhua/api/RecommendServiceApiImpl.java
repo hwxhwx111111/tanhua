@@ -102,4 +102,20 @@ public class RecommendServiceApiImpl implements RecommendServiceApi {
         //4、构造返回
         return results.getMappedResults();
     }
+
+    //查询缘分值
+    @Override
+    public Integer fateValue(Long userId, String toUserId) {
+        try {
+            Query query = Query.query(Criteria.where("toUserId").is(toUserId).and("userId").is(userId));
+            RecommendUser recommendUser = mongoTemplate.findOne(query, RecommendUser.class);
+            if (recommendUser==null){
+                return 50;
+            }
+            return new Double(recommendUser.getScore()).intValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 50;
+        }
+    }
 }

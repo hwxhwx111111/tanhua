@@ -1,5 +1,6 @@
 package com.itheima.tanhua.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.itheima.tanhua.api.db.UserInfoServiceApi;
@@ -121,7 +122,7 @@ public class RecommendService {
         UserInfo userInfo = userInfoServiceApi.findById(userId);
         //2、查询uid(当前登录者id)与userId（当前点击的佳人id）缘分值
         RecommendUser user = recommendServiceApi.findById(uid, userId);
-
+        System.out.println(user);
 
         //当前登录者id
         Long currentUserId =Convert.toLong( redisTemplate.opsForValue().get("AUTH_USER_ID"));
@@ -133,19 +134,24 @@ public class RecommendService {
         visitors.setFrom("首页");
         visitors.setDate(System.currentTimeMillis());
         visitors.setVisitDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        visitors.setScore(user.getScore());
+
+        Long score = 80L;
+        if (user!=null){
+            score= Convert.toLong(user.getScore());
+        }
+
         visitorsServiceApi.save(visitors);
 
 
         //3.构造返回值
-//        TodayBestVo vo = new TodayBestVo();
-//        BeanUtil.copyProperties(userInfo, vo);
-//        vo.setTags(StrUtil.split(userInfo.getTags(), ","));
-//        vo.setFateValue(score);
+        TodayBest vo = new TodayBest();
+        BeanUtil.copyProperties(userInfo, vo);
+        vo.setTags(StrUtil.split(userInfo.getTags(), ","));
+        vo.setFateValue(score);
 
 
         //3、构造返回值
-        return TodayBest.init(userInfo,user);
+        return vo;
     }
 
     public List<RecommendUser> queryCardList(Long userId, int count) {

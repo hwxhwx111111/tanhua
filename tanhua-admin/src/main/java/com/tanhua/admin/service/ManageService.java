@@ -136,7 +136,7 @@ public class ManageService {
 
     }
 
-    public PageResult<MovementsVoNew> findMovementByIdAndState(Integer page, Integer pagesize, Long id, Integer state,String sortProp,String sortOrder) {
+    public PageResult<MovementsVoNew> findMovementByIdAndState(Integer page, Integer pagesize, Long userId, Integer state,String sortProp,String sortOrder) {
 
         if(state==null){
 
@@ -149,10 +149,10 @@ public class ManageService {
             return pageResult;
         }
 
-        if (id != null) {
-            Long counts = movementServiceApi.findAll(id,state);
+        if (userId != null) {
+            Long counts = movementServiceApi.findAll(userId,state);
             //2.当前用户发布的动态数据  从mongodb中
-            List<Movement> movementList = movementServiceApi.findMovementByIdAndState(id, state, page, pagesize,sortProp,sortOrder);
+            List<Movement> movementList = movementServiceApi.findMovementByIdAndState(userId, state, page, pagesize,sortProp,sortOrder);
             //4.调用方法，封装数据
             PageResult<MovementsVoNew> pageResult = getPageResultOfVoList1(page, pagesize, counts, movementList);
             return pageResult;
@@ -190,7 +190,7 @@ public class ManageService {
             vo.setNickname(userInfo.getNickname()==null?"匿名":userInfo.getNickname());
             vo.setUserId(movement.getUserId());
             vo.setAvatar(userInfo.getAvatar());
-            vo.setCreateDate(movement.getCreated().toString());
+            vo.setCreateDate(Convert.toInt(movement.getCreated()));
             vo.setTextContent(movement.getTextContent());
             vo.setImageContent(movement.getMedias().toArray(new String[0]));
             vo.setState(movement.getState());

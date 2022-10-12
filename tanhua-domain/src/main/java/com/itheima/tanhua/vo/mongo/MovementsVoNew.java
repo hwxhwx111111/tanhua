@@ -1,6 +1,7 @@
 package com.itheima.tanhua.vo.mongo;
 
 
+import cn.hutool.core.convert.Convert;
 import com.itheima.tanhua.pojo.db.UserInfo;
 import com.itheima.tanhua.pojo.mongo.Movement;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ public class MovementsVoNew implements Serializable {
     private String nickname; //昵称
     private Long userId; //用户id
     private String avatar; //头像
-    private String createDate; //发布时间 如: 10分钟前
+    private Integer createDate; //发布时间 如: 10分钟前
     private String textContent; //文字动态
     private String[] imageContent; //图片动态
     private Integer state = 0;//状态 0：未审（默认），1：通过，2：驳回
@@ -33,7 +34,7 @@ public class MovementsVoNew implements Serializable {
         vo.setNickname(userInfo.getNickname());
         vo.setUserId(movement.getUserId());
         vo.setAvatar(userInfo.getAvatar());
-        vo.setCreateDate(movement.getCreated().toString());
+        vo.setCreateDate(Convert.toInt(movement.getCreated()));
         vo.setTextContent(movement.getTextContent());
         vo.setImageContent(movement.getMedias().toArray(new String[0]));
         vo.setState(movement.getState());

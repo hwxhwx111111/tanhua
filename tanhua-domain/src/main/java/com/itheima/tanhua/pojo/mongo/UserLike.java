@@ -1,5 +1,6 @@
 package com.itheima.tanhua.pojo.mongo;
 
+import cn.hutool.core.convert.Convert;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

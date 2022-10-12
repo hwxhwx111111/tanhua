@@ -83,16 +83,16 @@ public class ManageController {
     @GetMapping("/messages")
     public ResponseEntity<PageResult<MovementsVoNew>> messages(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                @RequestParam(value = "pagesize", defaultValue = "10") Integer pagesize,
-                                                               @RequestParam String id,
-                                                               @RequestParam String state,
-                                                               @RequestParam String sd,
-                                                               @RequestParam String ed,
+                                                               @RequestParam(required = false) String uid,
+                                                               @RequestParam(required = false) String state,
+                                                               @RequestParam(required = false) String sd,
+                                                               @RequestParam(required = false) String ed,
                                                                @RequestParam String sortProp,
                                                                @RequestParam String sortOrder) {
-        Long id1 = Convert.toLong(id);
+        Long userId = Convert.toLong(uid);
         Integer state1 = Convert.toInt(state);
         //PageResult<MovementsVoNew> result = manageService.findMovementByIdAndState(page, pagesize, id1, state1);
-        PageResult<MovementsVoNew> result = manageService.findMovementByIdAndState(page, pagesize, id1, state1,sortProp,sortOrder);
+        PageResult<MovementsVoNew> result = manageService.findMovementByIdAndState(page, pagesize, userId, state1,sortProp,sortOrder);
         return ResponseEntity.ok(result);
     }
 

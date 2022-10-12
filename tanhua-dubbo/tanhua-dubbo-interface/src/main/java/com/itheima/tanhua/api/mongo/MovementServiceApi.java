@@ -1,6 +1,7 @@
 package com.itheima.tanhua.api.mongo;
 
 import com.itheima.tanhua.pojo.mongo.Movement;
+import com.itheima.tanhua.pojo.mongo.UserLike;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public interface MovementServiceApi {
      * @return: java.util.List<com.itheima.tanhua.pojo.mongo.Movement>
      **/
     List<Movement> findMovementByUserId(Long userId, Integer page, Integer pagesize);
+
 
     /**
      * @description: 查询好友动态
@@ -60,6 +62,11 @@ public interface MovementServiceApi {
      * @param: [movementId]
      * @return: com.itheima.tanhua.pojo.mongo.Movement
      **/
+    /**
+     * 根据动态id查询
+     * @param movementId
+     * @return
+     */
     Movement findMovementByMovementId(String movementId);
 
     /**
@@ -125,4 +132,7 @@ public interface MovementServiceApi {
 
 
 
+
+    //添加不感兴趣
+    void save(UserLike userLike);
 }

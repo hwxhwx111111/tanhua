@@ -6,11 +6,13 @@ import cn.hutool.core.util.ObjectUtil;
 import com.itheima.autoconfig.template.OssTemplate;
 import com.itheima.tanhua.api.db.UserInfoServiceApi;
 import com.itheima.tanhua.api.mongo.MovementServiceApi;
+import com.itheima.tanhua.api.mongo.UserLikeServiceApi;
 import com.itheima.tanhua.api.mongo.VisitorsServiceApi;
 import com.itheima.tanhua.dto.mongo.MovementDto;
 import com.itheima.tanhua.exception.ConsumerException;
 import com.itheima.tanhua.pojo.db.UserInfo;
 import com.itheima.tanhua.pojo.mongo.Movement;
+import com.itheima.tanhua.pojo.mongo.UserLike;
 import com.itheima.tanhua.pojo.mongo.Visitors;
 import com.itheima.tanhua.utils.Constants;
 import com.itheima.tanhua.utils.RelativeDateFormat;
@@ -51,6 +53,9 @@ public class MovementService {
 
     @DubboReference
     private VisitorsServiceApi visitorsServiceApi;
+
+    @DubboReference
+    private UserLikeServiceApi userLikeServiceApi;
 
 
     /**
@@ -346,4 +351,20 @@ public class MovementService {
     }
 
 
+
+    /**
+     * 不感兴趣
+     * @param id
+     */
+    public void noInterest(String id) {
+        //登录者的id
+        Long userId = Convert.toLong(redisTemplate.opsForValue().get("AUTH_USER_ID"));
+        //根据动态id查询发布动态的userid
+        Movement movement = movementServiceApi.findMovementByMovementId(id);
+        try {
+            userLikeServiceApi.saveOrUpdate(userId, movement.getUserId(), false);
+        } catch (Exception e) {
+
+        }
+    }
 }

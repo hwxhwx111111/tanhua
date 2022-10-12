@@ -17,7 +17,11 @@
     </properties>
 
     <dependencies>
-
+        <!--RabbitMQ-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
         <!--fastdnf依赖-->
         <dependency>
             <groupId>com.github.tobato</groupId>
@@ -112,11 +116,11 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-     <!--   <dependency>
-            <groupId>com.itheima</groupId>
-            <artifactId>tanhua-dubbo-mongo</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>-->
+        <!--   <dependency>
+               <groupId>com.itheima</groupId>
+               <artifactId>tanhua-dubbo-mongo</artifactId>
+               <version>1.0-SNAPSHOT</version>
+           </dependency>-->
 
         <dependency>
             <groupId>com.itheima</groupId>

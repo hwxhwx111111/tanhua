@@ -91,8 +91,8 @@ public class ManageController {
                                                                @RequestParam String sortOrder) {
         Long id1 = Convert.toLong(id);
         Integer state1 = Convert.toInt(state);
-        //TODO
-        PageResult<MovementsVoNew> result = manageService.findMovementByIdAndState(page, pagesize, id1, state1);
+        //PageResult<MovementsVoNew> result = manageService.findMovementByIdAndState(page, pagesize, id1, state1);
+        PageResult<MovementsVoNew> result = manageService.findMovementByIdAndState(page, pagesize, id1, state1,sortProp,sortOrder);
         return ResponseEntity.ok(result);
     }
 
@@ -116,7 +116,7 @@ public class ManageController {
      * @param: [movementId]
      * @return: org.springframework.http.ResponseEntity<java.lang.String>
      **/
-    @GetMapping("/messages/{id}/top")
+    @PostMapping("/messages/{id}/top")
     public ResponseEntity<String> setMovementTop(@PathVariable("id") String movementId) {
         String result = manageService.setMovementTop(movementId);
         return ResponseEntity.ok(result);
@@ -129,7 +129,7 @@ public class ManageController {
      * @param: [movementId]
      * @return: org.springframework.http.ResponseEntity<java.lang.String>
      **/
-    @GetMapping("/messages/{id}/untop")
+    @PostMapping("/messages/{id}/untop")
     public ResponseEntity<String> divestMovementTop(@PathVariable("id") String movementId) {
         String result = manageService.divestMovementTop(movementId);
         return ResponseEntity.ok(result);
@@ -142,11 +142,12 @@ public class ManageController {
      * @param: [movementId]
      * @return: org.springframework.http.ResponseEntity
      **/
-    @GetMapping("/messages/pass")
+    @PostMapping("/messages/pass")
     public ResponseEntity<String> approveMovement(@RequestBody String[] movementIds) {
         String result = manageService.approveMovement(movementIds);
         return ResponseEntity.ok(result);
     }
+
 
     /**
      * @description: 动态拒绝
@@ -155,7 +156,7 @@ public class ManageController {
      * @param: [movementIds]
      * @return: org.springframework.http.ResponseEntity<java.lang.String>
      **/
-    @GetMapping("/messages/reject")
+    @PostMapping("/messages/reject")
     public ResponseEntity<String> rejectMovement(@RequestBody String[] movementIds) {
         String result = manageService.rejectMovement(movementIds);
         return ResponseEntity.ok(result);
@@ -163,7 +164,6 @@ public class ManageController {
 
     /**
      * 评论列表
-     *
      * @param page
      * @param pagesize
      * @param messageID
@@ -178,7 +178,6 @@ public class ManageController {
 
     /**
      * 视频记录
-     *
      * @param page
      * @param pagesize
      * @param uid

@@ -71,6 +71,15 @@ public interface MovementServiceApi {
      **/
     List<Movement> findMovementByIdAndState(Long uid, Integer state, Integer page, Integer pagesize);
 
+    List<Movement> findMovementByIdAndState(Long uid, Integer state, Integer page, Integer pagesize ,String sortProp,String sortOrder);
+
+    List<Movement> findMovementByIdAndState1(ArrayList<Long> ids, Integer state, Integer page, Integer pagesize);
+
+    List<Movement> findMovementByIdAndState1(ArrayList<Long> ids, Integer state, Integer page, Integer pagesize,String sortProp,String sortOrder);
+
+    List<Movement> findMovementByIdAndState1(ArrayList<Long> ids, Integer page, Integer pagesize,String sortProp,String sortOrder);
+
+
     /**
      * @description: 动态置顶
      * @author: 黄伟兴
@@ -107,11 +116,13 @@ public interface MovementServiceApi {
      **/
     Boolean rejectMovement(String[] movementIds);
 
-    Long findAll(Long id);
-
+    Long findAll(Long id,Integer state);
     Long findAll();
+
+    Long findAll( Integer state);
 
     ArrayList<Long> findUserIds();
 
-    List<Movement> findMovementByIdAndState1(ArrayList<Long> ids, Integer state, Integer page, Integer pagesize);
+
+
 }

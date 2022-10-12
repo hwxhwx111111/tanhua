@@ -68,10 +68,10 @@ public class ManageService {
 
         //封装为UsersInfoVo
         UsersInfoVo usersInfoVo = new UsersInfoVo();
-        BeanUtil.copyProperties(userInfo, usersInfoVo);
+        BeanUtil.copyProperties(userInfo,usersInfoVo);
         //判断是否为冻结状态
         String userStatus = redisTemplate.opsForValue().get(Constants.USER_FREEZE + userID);
-        if (StrUtil.equals(userStatus, UserStatus.FREEZE.getType())) {
+        if (StrUtil.equals(userStatus,UserStatus.FREEZE.getType())){
             //如果为冻结状态则将userStatus设置为2
             usersInfoVo.setUserStatus(UserStatus.FREEZE.getType());
         }
@@ -80,26 +80,26 @@ public class ManageService {
 
     public void freeze(FreezeDto freezeDto) {
         //将冻结详情放入redis中
-        String hashKey = Constants.FREEZE_USER + freezeDto.getUserId();
-        redisTemplate.opsForHash().put(hashKey, "freezingTime", Convert.toStr(freezeDto.getFreezingTime()));
-        redisTemplate.opsForHash().put(hashKey, "freezingRange", Convert.toStr(freezeDto.getFreezingRange()));
-        redisTemplate.opsForHash().put(hashKey, "reasonsForFreezing", freezeDto.getReasonsForFreezing());
-        redisTemplate.opsForHash().put(hashKey, "frozenRemarks", freezeDto.getFrozenRemarks());
+        String hashKey = Constants.FREEZE_USER+freezeDto.getUserId();
+        redisTemplate.opsForHash().put(hashKey,"freezingTime",Convert.toStr(freezeDto.getFreezingTime()));
+        redisTemplate.opsForHash().put(hashKey,"freezingRange",Convert.toStr(freezeDto.getFreezingRange()));
+        redisTemplate.opsForHash().put(hashKey,"reasonsForFreezing",freezeDto.getReasonsForFreezing());
+        redisTemplate.opsForHash().put(hashKey,"frozenRemarks",freezeDto.getFrozenRemarks());
         //根据freezingTime设置冻结时间
-        if (FreezingTime.THREE_DAY.getType() == freezeDto.getFreezingTime()) {
-            redisTemplate.opsForValue().set(Constants.USER_FREEZE + freezeDto.getUserId(), UserStatus.FREEZE.getType(), 3, TimeUnit.DAYS);
-        } else if (FreezingTime.ONE_WEEK.getType() == freezeDto.getFreezingTime()) {
-            redisTemplate.opsForValue().set(Constants.USER_FREEZE + freezeDto.getUserId(), UserStatus.FREEZE.getType(), 7, TimeUnit.DAYS);
-        } else {
-            redisTemplate.opsForValue().set(Constants.USER_FREEZE + freezeDto.getUserId(), UserStatus.FREEZE.getType());
+        if (FreezingTime.THREE_DAY.getType() == freezeDto.getFreezingTime()){
+            redisTemplate.opsForValue().set(Constants.USER_FREEZE+freezeDto.getUserId(),UserStatus.FREEZE.getType(),3, TimeUnit.DAYS);
+        }else  if (FreezingTime.ONE_WEEK.getType() == freezeDto.getFreezingTime()){
+            redisTemplate.opsForValue().set(Constants.USER_FREEZE+freezeDto.getUserId(),UserStatus.FREEZE.getType(),7, TimeUnit.DAYS);
+        }else{
+            redisTemplate.opsForValue().set(Constants.USER_FREEZE+freezeDto.getUserId(),UserStatus.FREEZE.getType());
         }
     }
 
     public void unfreeze(Integer userId, String frozenRemarks) {
         //将解封信息存入redis中
-        redisTemplate.opsForHash().put(Constants.FREEZE_USER + userId, "frozenRemarks", frozenRemarks);
+        redisTemplate.opsForHash().put(Constants.FREEZE_USER+userId,"frozenRemarks",frozenRemarks);
         //修改redis中的冻结信息
-        redisTemplate.delete(Constants.USER_FREEZE + userId);
+        redisTemplate.delete(Constants.USER_FREEZE+userId);
     }
 
 
@@ -117,7 +117,7 @@ public class ManageService {
         }
 
         if (id != null) {
-            Long counts = movementServiceApi.findAll(id);
+            Long counts = movementServiceApi.findAll(id,state);
             //2.当前用户发布的动态数据  从mongodb中
             List<Movement> movementList = movementServiceApi.findMovementByIdAndState(id, state, page, pagesize);
             //4.调用方法，封装数据
@@ -125,9 +125,42 @@ public class ManageService {
             return pageResult;
         }else{
             //查询全部用户动态
-            Long counts = movementServiceApi.findAll();
+            Long counts = movementServiceApi.findAll(state);
             ArrayList<Long> ids = movementServiceApi.findUserIds();
             List<Movement> movementList = movementServiceApi.findMovementByIdAndState1(ids, state, page, pagesize);
+
+            PageResult<MovementsVoNew> pageResult = getPageResultOfVoList1(page, pagesize, counts, movementList);
+            return pageResult;
+        }
+
+
+    }
+
+    public PageResult<MovementsVoNew> findMovementByIdAndState(Integer page, Integer pagesize, Long id, Integer state,String sortProp,String sortOrder) {
+
+        if(state==null){
+
+            //查询全部用户动态
+            Long counts = movementServiceApi.findAll();
+            ArrayList<Long> ids = movementServiceApi.findUserIds();
+            List<Movement> movementList = movementServiceApi.findMovementByIdAndState1(ids, page, pagesize,sortProp,sortOrder);
+
+            PageResult<MovementsVoNew> pageResult = getPageResultOfVoList1(page, pagesize, counts, movementList);
+            return pageResult;
+        }
+
+        if (id != null) {
+            Long counts = movementServiceApi.findAll(id,state);
+            //2.当前用户发布的动态数据  从mongodb中
+            List<Movement> movementList = movementServiceApi.findMovementByIdAndState(id, state, page, pagesize,sortProp,sortOrder);
+            //4.调用方法，封装数据
+            PageResult<MovementsVoNew> pageResult = getPageResultOfVoList1(page, pagesize, counts, movementList);
+            return pageResult;
+        }else{
+            //查询全部用户动态
+            Long counts = movementServiceApi.findAll(state);
+            ArrayList<Long> ids = movementServiceApi.findUserIds();
+            List<Movement> movementList = movementServiceApi.findMovementByIdAndState1(ids, state, page, pagesize,sortProp,sortOrder);
 
             PageResult<MovementsVoNew> pageResult = getPageResultOfVoList1(page, pagesize, counts, movementList);
             return pageResult;
@@ -170,8 +203,6 @@ public class ManageService {
 
         return new PageResult<MovementsVoNew>(page, pagesize, counts, list);
     }
-
-
 
     /**
      * @description: 动态置顶
@@ -278,4 +309,6 @@ public class ManageService {
         PageResult<VideoVoNew> result = new PageResult(page, pagesize, counts, list);
         return result;
     }
+
+
 }

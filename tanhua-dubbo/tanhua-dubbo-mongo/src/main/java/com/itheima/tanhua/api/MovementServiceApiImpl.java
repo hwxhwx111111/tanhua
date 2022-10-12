@@ -131,23 +131,35 @@ public class MovementServiceApiImpl implements MovementServiceApi {
     @Override
     public List<Movement> findMovementByIdAndState(Long uid, Integer state, Integer page, Integer pagesize) {
 
-        Criteria criteria=new Criteria();
-
-        if (uid != null) {
-            criteria = Criteria.where("userId").is(uid);
-        }
-        if (state != null) {
-            Criteria.where("state").is(state);
-        }else{
-            state=0;
-            Criteria.where("state").is(state);
-        }
-
+        Criteria criteria=Criteria.where("userId").is(uid).and("state").is(state);
 
         Query query = Query.query(criteria)
                 .skip((page - 1) * pagesize)
                 .limit(pagesize)
                 .with(Sort.by(Sort.Order.desc("created"))); //按发布时间降序
+
+        List<Movement> movements = mongoTemplate.find(query, Movement.class);
+        return movements;
+    }
+
+    @Override
+    public List<Movement> findMovementByIdAndState(Long uid, Integer state, Integer page, Integer pagesize, String sortProp, String sortOrder) {
+        Criteria criteria=Criteria.where("userId").is(uid).and("state").is(state);
+
+
+        Query query =new Query();
+        if("descending".equals(sortOrder)){
+           query = Query.query(criteria)
+                    .skip((page - 1) * pagesize)
+                    .limit(pagesize)
+                    .with(Sort.by(Sort.Order.desc(sortProp))); //按发布时间降序
+        }else{
+            query = Query.query(criteria)
+                    .skip((page - 1) * pagesize)
+                    .limit(pagesize)
+                    .with(Sort.by(Sort.Order.asc(sortProp))); //按发布时间降序
+        }
+
 
         List<Movement> movements = mongoTemplate.find(query, Movement.class);
         return movements;
@@ -211,7 +223,7 @@ public class MovementServiceApiImpl implements MovementServiceApi {
 
         for (String movementId : movementIds) {
             Movement movement = mongoTemplate.findById(movementId, Movement.class);
-            movement.setState(0);
+            movement.setState(2);
             Movement save = mongoTemplate.save(movement);
             if (save == null) {
                 return false;
@@ -221,15 +233,21 @@ public class MovementServiceApiImpl implements MovementServiceApi {
     }
 
     @Override
-    public Long findAll(Long id) {
-        long count = mongoTemplate.count(new Query(Criteria.where("_id").is(id)), Movement.class);
+    public Long findAll(Long id,Integer state) {
+        long count = mongoTemplate.count(new Query(Criteria.where("_id").is(id).and("state").is(state)), Movement.class);
 
         return count;
     }
 
     @Override
     public Long findAll() {
-        long count = mongoTemplate.count(new Query(), Movement.class);
+        long count = mongoTemplate.count(new Query(Criteria.where("state").in(0,1,2)), Movement.class);
+        return count;
+    }
+
+    @Override
+    public Long findAll( Integer state) {
+        long count = mongoTemplate.count(new Query(Criteria.where("state").is(state)), Movement.class);
 
         return count;
     }
@@ -252,6 +270,48 @@ public class MovementServiceApiImpl implements MovementServiceApi {
                 .skip((page - 1) * pagesize)
                 .limit(pagesize)
                 .with(Sort.by(Sort.Order.desc("created"))); //按发布时间降序
+
+        List<Movement> movements = mongoTemplate.find(query, Movement.class);
+        return movements;
+    }
+
+    @Override
+    public List<Movement> findMovementByIdAndState1(ArrayList<Long> ids, Integer state, Integer page, Integer pagesize, String sortProp, String sortOrder) {
+        Criteria criteria=Criteria.where("userId").in(ids).and("state").is(state);
+        Query query= new Query();
+
+        if("descending".equals(sortOrder)){
+             query = Query.query(criteria)
+                    .skip((page - 1) * pagesize)
+                    .limit(pagesize)
+                    .with(Sort.by(Sort.Order.desc(sortProp))); //按发布时间降序
+        }else{
+             query = Query.query(criteria)
+                    .skip((page - 1) * pagesize)
+                    .limit(pagesize)
+                    .with(Sort.by(Sort.Order.asc(sortProp))); //按发布时间降序
+        }
+
+        List<Movement> movements = mongoTemplate.find(query, Movement.class);
+        return movements;
+    }
+
+    @Override
+    public List<Movement> findMovementByIdAndState1(ArrayList<Long> ids, Integer page, Integer pagesize, String sortProp, String sortOrder) {
+        Criteria criteria=Criteria.where("userId").in(ids);
+        Query query= new Query();
+
+        if("descending".equals(sortOrder)){
+            query = Query.query(criteria)
+                    .skip((page - 1) * pagesize)
+                    .limit(pagesize)
+                    .with(Sort.by(Sort.Order.desc(sortProp))); //按发布时间降序
+        }else{
+            query = Query.query(criteria)
+                    .skip((page - 1) * pagesize)
+                    .limit(pagesize)
+                    .with(Sort.by(Sort.Order.asc(sortProp))); //按发布时间降序
+        }
 
         List<Movement> movements = mongoTemplate.find(query, Movement.class);
         return movements;

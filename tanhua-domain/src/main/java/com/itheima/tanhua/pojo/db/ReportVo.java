@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 
 /*
 测灵魂-结果
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionsResult {
+public class ReportVo implements Serializable {
 
     private String conclusion;   //枚举(4)鉴定结果
     private String cover;          //枚举(4)    鉴定图片

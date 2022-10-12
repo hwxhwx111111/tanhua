@@ -3,8 +3,9 @@ package com.itheima.tanhua.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.itheima.tanhua.pojo.db.Answers;
-import com.itheima.tanhua.pojo.db.QuestionsList;
+import com.itheima.tanhua.pojo.db.ReportVo;
 import com.itheima.tanhua.service.TestSoulService;
+import com.itheima.tanhua.vo.db.QuestionsListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,23 +48,20 @@ public class TestSoul {
             System.out.println(answers);
         }
 
-
-
-        return null;
+        return ResponseEntity.ok("提交成功!");
     }
 
     /**
      * @description: 测灵魂-查看结果
      * @author: 黄伟兴
      * @date: 2022/10/11 20:21
-     * @param: [id]
+     * @param: [id]  报告id
      * @return: org.springframework.http.ResponseEntity
      **/
     @GetMapping("/report/{id}")
     public ResponseEntity report(@PathVariable String id) {
-
-        return null;
-
+        ReportVo vo =  testSoulService.report1(id);
+        return ResponseEntity.ok(vo);
     }
 
     /**
@@ -75,7 +73,10 @@ public class TestSoul {
      **/
     @GetMapping
     public ResponseEntity questionList(){
-        ArrayList<QuestionsList> list  = testSoulService.questionList();
+//        ArrayList<QuestionsListVo> list  = testSoulService.questionList1();
+//        return ResponseEntity.ok(list);
+
+        ArrayList<QuestionsListVo> list  = testSoulService.questionList();
         return ResponseEntity.ok(list);
     }
 

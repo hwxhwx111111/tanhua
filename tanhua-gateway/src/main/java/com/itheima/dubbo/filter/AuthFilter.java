@@ -59,6 +59,9 @@ public class AuthFilter implements GlobalFilter {
             //4.获取当前登录者的id，存放在redis中，供其他接口路由调用
             Object userId = claimsBody.get("id");
             redisTemplate.opsForValue().set(redisKey, Convert.toStr(userId), idExpTime, TimeUnit.MILLISECONDS);
+
+            System.out.println(request.getURI().getPath());
+
             //放行
             return chain.filter(exchange);
         }

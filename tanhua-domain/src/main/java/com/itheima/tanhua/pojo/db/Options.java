@@ -9,10 +9,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dimensions implements Serializable {
-
-
-    private String key;         //枚举(4)  维度项（外向，判断，抽象，理性）
-    private String value;      //枚举(4)   维度值
-
+public class Options implements Serializable {
+    private String id;
+    private String option;
 }

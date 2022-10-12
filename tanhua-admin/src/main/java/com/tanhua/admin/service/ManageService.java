@@ -204,6 +204,8 @@ public class ManageService {
         return new PageResult<MovementsVoNew>(page, pagesize, counts, list);
     }
 
+
+
     /**
      * @description: 动态置顶
      * @author: 黄伟兴

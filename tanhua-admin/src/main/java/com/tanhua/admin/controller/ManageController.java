@@ -148,6 +148,7 @@ public class ManageController {
         return ResponseEntity.ok(result);
     }
 
+
     /**
      * @description: 动态拒绝
      * @author: 黄伟兴
@@ -163,7 +164,6 @@ public class ManageController {
 
     /**
      * 评论列表
-     *
      * @param page
      * @param pagesize
      * @param messageID
@@ -178,7 +178,6 @@ public class ManageController {
 
     /**
      * 视频记录
-     *
      * @param page
      * @param pagesize
      * @param uid

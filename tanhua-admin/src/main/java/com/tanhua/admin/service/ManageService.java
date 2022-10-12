@@ -5,19 +5,16 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.itheima.tanhua.api.db.UserInfoServiceApi;
-import com.itheima.tanhua.api.mongo.CommentServiceApi;
 import com.itheima.tanhua.api.mongo.MovementServiceApi;
-import com.itheima.tanhua.api.mongo.VideoServiceApi;
 import com.itheima.tanhua.dto.db.FreezeDto;
 import com.itheima.tanhua.enums.FreezingTime;
 import com.itheima.tanhua.enums.UserStatus;
 import com.itheima.tanhua.pojo.db.UserInfo;
-import com.itheima.tanhua.pojo.mongo.Comment;
-import com.itheima.tanhua.pojo.mongo.CommentType;
 import com.itheima.tanhua.pojo.mongo.Movement;
 import com.itheima.tanhua.utils.Constants;
 import com.itheima.tanhua.vo.db.UsersInfoVo;
-import com.itheima.tanhua.vo.mongo.*;
+import com.itheima.tanhua.vo.mongo.MovementsVoNew;
+import com.itheima.tanhua.vo.mongo.PageResult;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -68,10 +65,10 @@ public class ManageService {
 
         //封装为UsersInfoVo
         UsersInfoVo usersInfoVo = new UsersInfoVo();
-        BeanUtil.copyProperties(userInfo, usersInfoVo);
+        BeanUtil.copyProperties(userInfo,usersInfoVo);
         //判断是否为冻结状态
         String userStatus = redisTemplate.opsForValue().get(Constants.USER_FREEZE + userID);
-        if (StrUtil.equals(userStatus, UserStatus.FREEZE.getType())) {
+        if (StrUtil.equals(userStatus,UserStatus.FREEZE.getType())){
             //如果为冻结状态则将userStatus设置为2
             usersInfoVo.setUserStatus(UserStatus.FREEZE.getType());
         }
@@ -80,26 +77,26 @@ public class ManageService {
 
     public void freeze(FreezeDto freezeDto) {
         //将冻结详情放入redis中
-        String hashKey = Constants.FREEZE_USER + freezeDto.getUserId();
-        redisTemplate.opsForHash().put(hashKey, "freezingTime", Convert.toStr(freezeDto.getFreezingTime()));
-        redisTemplate.opsForHash().put(hashKey, "freezingRange", Convert.toStr(freezeDto.getFreezingRange()));
-        redisTemplate.opsForHash().put(hashKey, "reasonsForFreezing", freezeDto.getReasonsForFreezing());
-        redisTemplate.opsForHash().put(hashKey, "frozenRemarks", freezeDto.getFrozenRemarks());
+        String hashKey = Constants.FREEZE_USER+freezeDto.getUserId();
+        redisTemplate.opsForHash().put(hashKey,"freezingTime",Convert.toStr(freezeDto.getFreezingTime()));
+        redisTemplate.opsForHash().put(hashKey,"freezingRange",Convert.toStr(freezeDto.getFreezingRange()));
+        redisTemplate.opsForHash().put(hashKey,"reasonsForFreezing",freezeDto.getReasonsForFreezing());
+        redisTemplate.opsForHash().put(hashKey,"frozenRemarks",freezeDto.getFrozenRemarks());
         //根据freezingTime设置冻结时间
-        if (FreezingTime.THREE_DAY.getType() == freezeDto.getFreezingTime()) {
-            redisTemplate.opsForValue().set(Constants.USER_FREEZE + freezeDto.getUserId(), UserStatus.FREEZE.getType(), 3, TimeUnit.DAYS);
-        } else if (FreezingTime.ONE_WEEK.getType() == freezeDto.getFreezingTime()) {
-            redisTemplate.opsForValue().set(Constants.USER_FREEZE + freezeDto.getUserId(), UserStatus.FREEZE.getType(), 7, TimeUnit.DAYS);
-        } else {
-            redisTemplate.opsForValue().set(Constants.USER_FREEZE + freezeDto.getUserId(), UserStatus.FREEZE.getType());
+        if (FreezingTime.THREE_DAY.getType() == freezeDto.getFreezingTime()){
+            redisTemplate.opsForValue().set(Constants.USER_FREEZE+freezeDto.getUserId(),UserStatus.FREEZE.getType(),3, TimeUnit.DAYS);
+        }else  if (FreezingTime.ONE_WEEK.getType() == freezeDto.getFreezingTime()){
+            redisTemplate.opsForValue().set(Constants.USER_FREEZE+freezeDto.getUserId(),UserStatus.FREEZE.getType(),7, TimeUnit.DAYS);
+        }else{
+            redisTemplate.opsForValue().set(Constants.USER_FREEZE+freezeDto.getUserId(),UserStatus.FREEZE.getType());
         }
     }
 
     public void unfreeze(Integer userId, String frozenRemarks) {
         //将解封信息存入redis中
-        redisTemplate.opsForHash().put(Constants.FREEZE_USER + userId, "frozenRemarks", frozenRemarks);
+        redisTemplate.opsForHash().put(Constants.FREEZE_USER+userId,"frozenRemarks",frozenRemarks);
         //修改redis中的冻结信息
-        redisTemplate.delete(Constants.USER_FREEZE + userId);
+        redisTemplate.delete(Constants.USER_FREEZE+userId);
     }
 
 
@@ -242,6 +239,41 @@ public class ManageService {
 
         ///2.封装数据
         return MovementsVoNew.init(movement, userInfo);
+    }
+
+    public PageResult comments(Integer page, Integer pagesize, String messageID) {
+        List<Comment> comments = commentServiceApi.findComments(messageID, CommentType.COMMENT, page, pagesize);
+        Long counts = commentServiceApi.count(messageID, CommentType.COMMENT.getType());
+        List<CommentVoNew> list = new ArrayList();
+        for (Comment comment : comments) {
+
+            Long userId = comment.getUserId();
+            UserInfo userInfo = userInfoServiceApi.findById(userId);
+            CommentVoNew commentVoNew = new CommentVoNew();
+            BeanUtil.copyProperties(comment, commentVoNew, new String[0]);
+            commentVoNew.setCreateDate(comment.getCreated());
+            commentVoNew.setNickname(userInfo.getNickname());
+            list.add(commentVoNew);
+        }
+        PageResult<CommentVoNew> result = new PageResult(page, pagesize, counts, list);
+        return result;
+    }
+
+    public PageResult videos(Integer page, Integer pagesize, String uid) {
+        List<Video> videoList = videoServiceApi.findPageByUserId(page, pagesize, uid);
+        Long counts = videoServiceApi.count(uid);
+        List<VideoVoNew> list = new ArrayList();
+        for (Video video : videoList) {
+            VideoVoNew vo = new VideoVoNew();
+            BeanUtil.copyProperties(video, vo, new String[]{"id"});
+            vo.setId(video.getVid());
+            vo.setCreateDate(video.getCreated());
+            UserInfo userInfo = userInfoServiceApi.findById(video.getUserId());
+            vo.setNickname(userInfo.getNickname());
+            list.add(vo);
+        }
+        PageResult<VideoVoNew> result = new PageResult(page, pagesize, counts, list);
+        return result;
     }
 
     public PageResult comments(Integer page, Integer pagesize, String messageID) {

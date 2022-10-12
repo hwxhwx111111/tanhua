@@ -148,7 +148,6 @@ public class ManageController {
         return ResponseEntity.ok(result);
     }
 
-
     /**
      * @description: 动态拒绝
      * @author: 黄伟兴

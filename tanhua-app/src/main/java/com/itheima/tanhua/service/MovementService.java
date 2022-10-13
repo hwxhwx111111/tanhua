@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import com.itheima.autoconfig.template.OssTemplate;
+import com.itheima.tanhua.Interface.LogConfig;
 import com.itheima.tanhua.api.db.UserInfoServiceApi;
 import com.itheima.tanhua.api.mongo.MovementServiceApi;
 import com.itheima.tanhua.api.mongo.UserLikeServiceApi;
@@ -65,6 +66,7 @@ public class MovementService {
      * @param: [movementDto, imageContent]
      * @return: void
      **/
+    @LogConfig(type = "0201",key = "movement")
     public void publish(MovementDto movementDto, MultipartFile[] imageContent) {
 
         //1.从redis中获取用户id
@@ -135,6 +137,7 @@ public class MovementService {
      * @param: [id]
      * @return: org.springframework.http.ResponseEntity
      **/
+    @LogConfig(type = "0202",key = "movement",objId = "#movementId")
     public MovementsVo findRecommendById(String movementId) {
 
         Movement movement = movementServiceApi.findMovementByMovementId(movementId);

@@ -4,7 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import com.itheima.tanhua.pojo.Analysis;
+import com.itheima.tanhua.pojo.db.Analysis;
 import com.itheima.tanhua.vo.db.AnalysisSummaryVo;
 import com.itheima.tanhua.vo.db.AnalysisUsersVo;
 import com.tanhua.admin.mapper.AnalysisMapper;

@@ -127,13 +127,11 @@ public class MovementServiceApiImpl implements MovementServiceApi {
         return movement;
     }
 
-        return mongoTemplate.findById(movementId, Movement.class);
+
     @Override
     public void save(UserLike userLike) {
         mongoTemplate.save(userLike);
-    @Override
-    public void save(UserLike userLike) {
-        mongoTemplate.save(userLike);
+
     }
 
     /**

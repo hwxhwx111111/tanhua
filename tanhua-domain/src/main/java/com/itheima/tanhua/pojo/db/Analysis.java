@@ -1,4 +1,4 @@
-package com.itheima.tanhua.pojo;
+package com.itheima.tanhua.pojo.db;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -13,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @TableName("tb_analysis_by_day")
-public class Analysis{
+public class Analysis extends BasePojo implements Serializable {
 
     private Long id;
     /**
@@ -37,5 +38,5 @@ public class Analysis{
      */
     private Integer numRetention1d = 0;
 
-    private Date created;
+
 }

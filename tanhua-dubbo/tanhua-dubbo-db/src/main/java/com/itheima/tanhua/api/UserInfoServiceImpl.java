@@ -144,5 +144,10 @@ public class UserInfoServiceImpl implements UserInfoServiceApi {
         return map;
     }
 
+    @Override
+    public void updateUser(UserInfo userInfo) {
+        userInfoMapper.updateById(userInfo);
+    }
+
 
 }

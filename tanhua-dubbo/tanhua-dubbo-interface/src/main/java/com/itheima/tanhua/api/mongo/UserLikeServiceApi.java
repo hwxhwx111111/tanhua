@@ -15,4 +15,12 @@ public interface UserLikeServiceApi {
     List<UserLike> fendByIdLove(Long userId);
 
     List<UserLike> fendByIdLike(Long userId);
+
+    List<UserLike> selectLove(Long userId);
+
+    List<UserLike> selectFan(Long userId);
+
+    List<UserLike> selectEachLove(Long userId);
+
+    Boolean findFs(Long userId, Long fanUser);
 }

@@ -13,7 +13,7 @@ spring:
     url: jdbc:mysql:///tanhua?useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: 1234
+    password: root
 
 dubbo:
   registry:

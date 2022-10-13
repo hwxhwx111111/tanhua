@@ -7,7 +7,11 @@ spring:
   cloud:
     nacos:
       server-addr: 192.168.136.160:8848
-
+  rabbitmq:
+    host: 192.168.136.160
+    port: 5672
+    username: guest
+    password: guest
   redis:
     host: 192.168.136.160
     port: 6379

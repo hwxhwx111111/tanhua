@@ -24,8 +24,8 @@ public class MqMessageService {
             Map map = new HashMap();
             map.put("userId",userId.toString());
             map.put("type",type);
-            map.put("logTime",new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            map.put("busId",busId);
+            map.put("date",new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            map.put("objId",busId);
             String message = JSON.toJSONString(map);
             amqpTemplate.convertAndSend("tanhua.log.exchange",
                     "log."+key,message);

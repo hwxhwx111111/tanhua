@@ -2,6 +2,7 @@ package com.itheima.tanhua.api;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,6 +14,7 @@ import com.itheima.tanhua.pojo.db.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -117,6 +119,29 @@ public class UserInfoServiceImpl implements UserInfoServiceApi {
         userInfoMapper.selectPage(iPage, lqw);
         log.info("数据为{}",iPage.getRecords());
         return iPage;
+    }
+    @Override
+    public Map<Long, UserInfo> findbyIds(List<Long> userIds, UserInfo userInfo) {
+
+        //查询
+        QueryWrapper qw = new QueryWrapper();
+        //1、用户id列表
+        qw.in("id",userIds);
+        //2、添加筛选条件
+        if(userInfo != null) {
+            if(ObjectUtil.isNotNull(userInfo.getAge())) {
+                qw.lt("age",userInfo.getAge());
+            }
+            if(!StringUtils.isEmpty(userInfo.getGender())) {
+                qw.eq("gender",userInfo.getGender());
+            }
+            if(!StringUtils.isEmpty(userInfo.getNickname())) {
+                qw.like("nickname",userInfo.getNickname());
+            }
+        }
+        List<UserInfo> list = userInfoMapper.selectList(qw);
+        Map<Long, UserInfo> map = CollUtil.fieldValueMap(list, "id");
+        return map;
     }
 
 

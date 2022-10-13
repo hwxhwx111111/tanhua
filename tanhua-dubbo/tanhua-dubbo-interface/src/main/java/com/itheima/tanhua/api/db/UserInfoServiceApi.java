@@ -61,4 +61,5 @@ public interface UserInfoServiceApi {
      * @return
      */
     IPage<UserInfo> findPageUsers(Integer page, Integer pagesize);
+    Map<Long, UserInfo> findbyIds(List<Long> userIds, UserInfo userInfo);
 }

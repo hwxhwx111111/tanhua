@@ -1,5 +1,6 @@
 package com.itheima.tanhua.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import com.itheima.autoconfig.template.HuanXinTemplate;
 import com.itheima.tanhua.api.mongo.FriendServiceApi;
@@ -77,5 +78,48 @@ public class FriendService {
         }
 
         friendServiceApi.deleteContacts(currentUserId, friendId);
+    }
+    /**
+     * 添加好友
+     *
+     * @param friendId
+     */
+    public void contacts(Long friendId) {
+        String uid = redisTemplate.opsForValue().get("AUTH_USER_ID");
+        //1、将好友关系注册到环信
+        Boolean aBoolean = huanXinTemplate.addContact(Constants.HX_USER_PREFIX + friendId, Constants.HX_USER_PREFIX + uid);
+        //2、如果注册成功，记录好友关系到mongodb
+        if (!aBoolean) {
+            throw new ConsumerException("注册到环信失败");
+        }
+        friendServiceApi.save(uid,friendId);
+
+    }
+
+    /**
+     *获取所有好友的id
+     * @param uid
+     * @return
+     */
+    public List<Long> findFriendIds(String uid) {
+        List <Friend> friends=friendServiceApi.findByUid(uid);
+        List<Long> friendIds = CollUtil.getFieldValues(friends, "friendId",Long.class);
+        return  friendIds;
+    }
+
+    /**
+     * 删除好友关系
+     * @param likeUserId
+     */
+    public void deleteFriend(Long likeUserId) {
+
+        String uid = redisTemplate.opsForValue().get("AUTH_USER_ID");
+        //1、将好友关系从环信删除
+        Boolean aBoolean = huanXinTemplate.deleteContact(Constants.HX_USER_PREFIX + likeUserId.toString(), Constants.HX_USER_PREFIX + uid);
+        //2、如果删除成功，移除mongodb好友关系
+        if (!aBoolean) {
+            throw new ConsumerException("从环信中删除好友失败");
+        }
+        friendServiceApi.remove(uid,likeUserId);
     }
 }

@@ -77,4 +77,14 @@ public class QuestionService {
         }
         return question.getTxt();
     }
+    /**
+     * 设置陌生人问题
+     * @param content
+     */
+    public void setQuestion(String content) {
+        //获取当前用户的id
+        String uid = redisTemplate.opsForValue().get("AUTH_USER_ID");
+
+        questionServiceApi.saveOrUpdate(Long.valueOf(uid),content);
+    }
 }

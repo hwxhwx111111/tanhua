@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.itheima.autoconfig.template.HuanXinTemplate;
 import com.itheima.autoconfig.template.OssTemplate;
+import com.itheima.tanhua.Interface.LogConfig;
 import com.itheima.tanhua.api.db.UserServiceApi;
 import com.itheima.tanhua.exception.ConsumerException;
 import com.itheima.tanhua.pojo.db.User;
@@ -29,7 +30,10 @@ public class UserService {
 
     //@Autowired
     // private SmsTemplate smsTemplate;
-
+    @Autowired
+    private UserFreezeService userFreezeService;
+    @Autowired
+    private MqMessageService mqMessageService;
     @DubboReference
     private UserServiceApi userServiceApi;
 
@@ -48,6 +52,11 @@ public class UserService {
      * @return: void
      **/
     public boolean sendMsg(String phone) {
+        //根据手机号查询用户，如果用户存在，判断是否被冻结
+        User user = userServiceApi.findByPhone(phone);
+        if(user != null) {
+            userFreezeService.checkUserStatus("1",user.getId());
+        }
         String redisKey = "CODE_" + phone;
 
         //1. 判断redis是否已经存在验证码了
@@ -81,7 +90,7 @@ public class UserService {
     public HashMap loginVerification(String phone, String verificationCode) {
         String redisKey = "CODE_" + phone;
         boolean isNew = false;
-
+        String type = "0101";
         //1.从redis获取验证码
         String code = redisTemplate.opsForValue().get(redisKey);
         if (code == null) {
@@ -96,6 +105,7 @@ public class UserService {
         //3.根据手机号查询用户，远程调用
         User user = userServiceApi.findByPhone(phone);
         if (ObjectUtil.isNull(user)) {
+            type = "0102";
             //新用户，自动注册
             user = new User();
             user.setMobile(phone);
@@ -117,7 +127,7 @@ public class UserService {
             }
 
         }
-
+        mqMessageService.sendLogService(user.getId(),type,"user",null);
         //4.生成token，保存用户id
         String token = AppJwtUtil.getToken(user.getId());
 

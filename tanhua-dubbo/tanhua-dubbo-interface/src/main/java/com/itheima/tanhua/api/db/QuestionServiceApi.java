@@ -13,5 +13,7 @@ public interface QuestionServiceApi {
      * @return: com.itheima.tanhua.pojo.db.Question
      **/
     Question findByUserId(Long userId);
+    String findStrangerQuestions(Long userId);
+    void saveOrUpdate(Long valueOf, String txt);
 
 }

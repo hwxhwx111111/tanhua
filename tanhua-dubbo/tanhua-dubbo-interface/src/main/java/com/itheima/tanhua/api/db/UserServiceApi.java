@@ -27,4 +27,5 @@ public interface UserServiceApi {
      * @return: org.springframework.http.ResponseEntity<com.itheima.tanhua.vo.db.HuanxinVo>
      **/
     User findHuanxinById(Long userId);
+    User findByUserId(String uid);
 }

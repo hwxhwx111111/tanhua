@@ -67,4 +67,9 @@ public class UserServiceImpl implements UserServiceApi {
         }
         return user;
     }
+    @Override
+    public User findByUserId(String uid) {
+        User user = userMapper.selectById(Long.valueOf(uid));
+        return user;
+    }
 }

@@ -19,6 +19,12 @@
 
     <dependencies>
 
+        <!--RabbitMQ-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.itheima</groupId>
             <artifactId>tanhua-commons</artifactId>

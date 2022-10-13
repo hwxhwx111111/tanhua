@@ -130,6 +130,7 @@ public class MovementServiceApiImpl implements MovementServiceApi {
     @Override
     public void save(UserLike userLike) {
         mongoTemplate.save(userLike);
+
     }
 
     /**

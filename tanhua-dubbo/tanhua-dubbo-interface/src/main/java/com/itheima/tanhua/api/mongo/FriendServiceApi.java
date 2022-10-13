@@ -25,4 +25,9 @@ public interface FriendServiceApi {
     List<Friend> findFriend(Long currentUserId, Integer page, Integer pagesize);
 
     void deleteContacts(Long currentUserId, Long friendId);
+    void save(String uid, Long friendId);
+
+    List<Friend> findByUid(String uid);
+
+    void remove(String uid, Long likeUserId);
 }

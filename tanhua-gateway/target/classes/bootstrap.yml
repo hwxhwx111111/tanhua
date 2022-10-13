@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: app-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.136.160:8848
+      config:
+        server-addr: 192.168.136.160:8848
+        file-extension: yml
+  #redis配置
+  redis:
+    host: 192.168.136.160
+    port: 6379

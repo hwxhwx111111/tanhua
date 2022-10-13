@@ -15,4 +15,5 @@ public interface QuestionServiceApi {
     Question findByUserId(Long userId);
     String findStrangerQuestions(Long userId);
     void saveOrUpdate(Long valueOf, String txt);
+
 }

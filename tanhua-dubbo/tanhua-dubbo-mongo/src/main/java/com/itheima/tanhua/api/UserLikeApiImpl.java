@@ -52,5 +52,25 @@ public class UserLikeApiImpl implements UserLikeApi {
             return false;
         }
     }
+
+    @Override
+    public Boolean deleteOrUpdate(Long uid, Long likeUserId, boolean isLike) {
+        //根据传递参数判断数据库存不存在喜欢数据,存在更新,不存在添加保存
+        try {
+            Query query = Query.query(Criteria.where("userId").is(uid).and("likeUserId").is(likeUserId));
+            UserLike userLike = mongoTemplate.findOne(query, UserLike.class);
+            //2、如果存在，保存
+            if (userLike != null) {
+                Query query1 = Query.query(Criteria.where("userId").is(uid));
+                mongoTemplate.remove(query1,UserLike.class);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
 

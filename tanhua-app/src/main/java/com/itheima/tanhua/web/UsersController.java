@@ -100,6 +100,17 @@ public class UsersController {
     }
 
     /**
+     * 取消喜欢
+     * @param uid
+     * @return
+     */
+    @DeleteMapping("like/{uid}")
+    public ResponseEntity fansNotLike(@PathVariable String uid) {
+        likeUserService.fansNotLike(uid);
+        return ResponseEntity.ok(null);
+    }
+
+    /**
      * 查询通用设置
      *
      * @return
@@ -145,17 +156,6 @@ public class UsersController {
     public ResponseEntity savePhone(@RequestBody Map<String, String> phone) {
         String phone1 = phone.get("phone");
         userService.savePhone(phone1);
-        return ResponseEntity.ok(null);
-    }
-
-    /**
-     * 取消喜欢
-     * @param likeUserId
-     * @return
-     */
-    @DeleteMapping("like/{uid}")
-    public ResponseEntity cancelLove(@PathVariable("uid") Long likeUserId) {
-        tanhuaService.notLikeUser(likeUserId);
         return ResponseEntity.ok(null);
     }
 

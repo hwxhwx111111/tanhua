@@ -87,7 +87,30 @@ public class LikeUserService {
         if (isLike(fansId, Long.valueOf(userId))) {
             friendService.contacts(fansId);
         }
-
     }
+    /**
+     * 取消喜欢
+     *uid,粉丝id
+     * @param uid
+     */
+    public void fansNotLike(String uid) {
+        String userId = stringRedisTemplate.opsForValue().get("AUTH_USER_ID");
+        //将喜欢数据保存到mongodb
+        Long fansId = Long.valueOf(uid);
+        Boolean save = userLikeApi.deleteOrUpdate(Long.valueOf(userId), fansId, true);
+        if (!save) {
+            throw new ConsumerException("取消数据库失败");
+        }
+        //删除喜欢的数据
+        stringRedisTemplate.opsForSet().add(Constants.USER_NOT_LIKE_KEY + userId, fansId.toString());
+        //写入不喜欢的数据
+//        stringRedisTemplate.opsForSet().remove(Constants.USER_LIKE_KEY+ userId, fansId.toString());
+        //判断是否为双向喜欢,是的话建立好友关系
+        if (isLike(fansId, Long.valueOf(userId))) {
+            friendService.contacts(fansId);
+        }
+    }
+
+
 }
 

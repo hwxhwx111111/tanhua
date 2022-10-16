@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.tanhua.mapper.SoulOptionMapper">
+
+	<select id="get" resultType="com.itheima.tanhua.pojo.db.SoulOption">
+		select * from tb_soul_option where question_id = #{questionId}
+	</select>
+	<select id="calculateScore" resultType="java.lang.Integer">
+		select sum(score) from tb_soul_option where id in ( -1,
+		    <foreach collection="list" item="id" separator="," >
+				#{id}
+			</foreach>
+			)
+	</select>
+
+</mapper>

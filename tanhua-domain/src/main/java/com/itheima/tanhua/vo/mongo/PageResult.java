@@ -25,4 +25,9 @@ public class PageResult<T> implements Serializable {
         this.pages = counts % pagesize == 0 ? counts / pagesize : counts / pagesize + 1;
         this.items = list;
     }
+    public PageResult(int page, int pageSize, List<T> items){
+        this.page = page;
+        this.pagesize = pageSize;
+        this.items = items;
+    }
 }

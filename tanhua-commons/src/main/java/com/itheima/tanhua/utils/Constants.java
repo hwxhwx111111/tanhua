@@ -58,4 +58,14 @@ public class Constants {
 
     //关注用户的key
     public static final String FOCUS_USER_KEY = "FOCUS_USER_KEY_";
+
+    //关注用户
+    //public static final String FOCUS_USER = "FOCUS_USER_{}_{}";
+    public static final String FOCUS_USER = "FOCUS_USER";
+
+    //
+    public static final String VIDEO_INTERACT_KEY = "VIDEO_INTERACT_";
+    public static final String REPORT = "REPORT_";
+
+    public static final String PEACH_BOLSSOM_REMAIN = "PEACH_BOLSSOM_REMAIN_";
 }

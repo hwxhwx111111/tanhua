@@ -1,6 +1,7 @@
 package com.itheima.tanhua.vo.mongo;
 
 
+import cn.hutool.core.convert.Convert;
 import com.itheima.tanhua.pojo.db.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,6 +42,22 @@ public class VideoVo implements Serializable {
         vo.setSignature(item.getText());
         vo.setHasFocus(0);
         vo.setHasLiked(0);
+        return vo;
+    }
+    public static VideoVo init(UserInfo userInfo, Video item, boolean hasFocus, boolean hasLike) {
+        if(userInfo == null){
+            return null;
+        }
+        VideoVo vo = new VideoVo();
+        //copy用户属性
+        BeanUtils.copyProperties(userInfo, vo);  //source,target
+        //copy视频属性
+        BeanUtils.copyProperties(item,vo);
+        vo.setCover(item.getPicUrl());
+        vo.setId(Convert.toStr(item.getId()));
+        vo.setSignature(item.getText());
+        vo.setHasFocus(hasFocus ? 1 : 0);
+        vo.setHasLiked(hasLike ? 1 : 0);
         return vo;
     }
 }

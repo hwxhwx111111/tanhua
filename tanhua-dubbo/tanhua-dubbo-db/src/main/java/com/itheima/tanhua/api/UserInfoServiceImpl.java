@@ -2,8 +2,10 @@ package com.itheima.tanhua.api;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -14,10 +16,12 @@ import com.itheima.tanhua.pojo.db.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @DubboService //发布到注册中心
 @Slf4j
@@ -120,6 +124,32 @@ public class UserInfoServiceImpl implements UserInfoServiceApi {
         log.info("数据为{}",iPage.getRecords());
         return iPage;
     }
+
+    @Override
+    public Map<Long, UserInfo> getUserInfoMap(List<Long> userId, UserInfo condition) {
+        List<UserInfo> userInfo = getUserInfo(userId, condition);
+        Map<Long, UserInfo> map = new HashMap<>();
+        userInfo.forEach(u -> map.put(u.getId(), u));
+        return map;
+    }
+    @Override
+    public List<UserInfo> getUserInfo(List<Long> userIds, UserInfo condition) {
+        if(CollUtil.isEmpty(userIds)){
+            return Collections.emptyList();
+        }
+        LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(UserInfo::getId, userIds);
+        if(condition != null) {
+            queryWrapper.eq(StrUtil.isNotBlank(condition.getNickname()), UserInfo::getNickname, condition.getNickname())
+                    .eq(StrUtil.isNotBlank(condition.getGender()), UserInfo::getGender, condition.getGender())
+                    .eq(StrUtil.isNotBlank(condition.getEducation()), UserInfo::getEducation, condition.getEducation())
+                    .like(StrUtil.isNotBlank(condition.getCity()), UserInfo::getCity, condition.getCity())
+                    .eq(ObjectUtil.isNotNull(condition.getMarriage()), UserInfo::getMarriage, condition.getMarriage());
+        }
+        return userInfoMapper.selectList(queryWrapper).stream()
+                .filter(u -> ObjectUtil.isNull(condition) || StrUtil.isBlank(Convert.toStr(condition.getAge())) || Integer.parseInt(Convert.toStr(u.getAge())) <= Integer.parseInt(Convert.toStr(condition.getAge())))
+                .collect(Collectors.toList());
+    }
     @Override
     public Map<Long, UserInfo> findbyIds(List<Long> userIds, UserInfo userInfo) {
 
@@ -148,6 +178,4 @@ public class UserInfoServiceImpl implements UserInfoServiceApi {
     public void updateUser(UserInfo userInfo) {
         userInfoMapper.updateById(userInfo);
     }
-
-
 }

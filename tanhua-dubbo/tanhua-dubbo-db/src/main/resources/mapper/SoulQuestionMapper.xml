@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.tanhua.mapper.SoulQuestionMapper">
+
+	<resultMap id="getMapping" type="com.itheima.tanhua.pojo.db.SoulQuestion">
+		<id column="id" property="id"/>
+		<collection property="options" column="id" ofType="com.itheima.tanhua.pojo.db.SoulOption" select="com.itheima.tanhua.mapper.SoulOptionMapper.get"/>
+	</resultMap>
+
+	<select id="get" resultMap="getMapping">
+		select * from tb_soul_question where level_id = #{levelId}
+	</select>
+</mapper>
